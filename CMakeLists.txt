@@ -22,3 +22,9 @@ option(SCC_BUILD_EXAMPLE "Build examples" ON)
 if(SCC_BUILD_EXAMPLE)
     add_subdirectory(example)
 endif()
+
+option(SCC_BUILD_TEST "Build tests" ON)
+
+if(SCC_BUILD_TEST)
+    add_subdirectory(test)
+endif()
