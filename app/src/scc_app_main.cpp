@@ -1,10 +1,10 @@
 #include <iostream>
-#include "boost/graph/adjacency_list.hpp"
-#include "boost/graph/graphviz.hpp"
-#include "boost/graph/depth_first_search.hpp"
+#include <boost/graph/graphviz.hpp>
+#include <boost/graph/depth_first_search.hpp>
+
+#include "sccalgorithms/scc_utils.h"
 
 typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS> DirectedGraph;
-typedef boost::graph_traits<DirectedGraph>::vertex_descriptor MyVertex;
 
 class MyVisitor : public boost::default_dfs_visitor {
 public:

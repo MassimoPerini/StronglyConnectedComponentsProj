@@ -13,18 +13,7 @@ project(scc)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# find Boost Graph Library or Download it
-hunter_add_package(Boost COMPONENTS graph)
-find_package(Boost CONFIG REQUIRED graph)
+add_subdirectory(libsccalgorithms)
 
-option(SCC_BUILD_EXAMPLE "Build examples" ON)
+add_subdirectory(app)
 
-if(SCC_BUILD_EXAMPLE)
-    add_subdirectory(example)
-endif()
-
-option(SCC_BUILD_TEST "Build tests" ON)
-
-if(SCC_BUILD_TEST)
-    add_subdirectory(test)
-endif()
