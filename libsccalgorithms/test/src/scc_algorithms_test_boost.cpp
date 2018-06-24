@@ -39,3 +39,7 @@ TEST_F(ExampleGraphs, MyStrongComponents) {
     ASSERT_EQ(-1, sccalgorithms::strong_connected_components(tarjanGraph, 0));
 }
 
+
+TEST_F(ExampleGraphs, MyNutilia) {
+    ASSERT_EQ(0, sccalgorithms::nuutila_ssc(tarjanGraph));
+}

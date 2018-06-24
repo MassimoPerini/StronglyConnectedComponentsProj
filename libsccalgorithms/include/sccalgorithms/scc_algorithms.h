@@ -6,6 +6,8 @@
 namespace sccalgorithms {
 
     unsigned strong_connected_components(const DirectedGraph &, const Vertex&);
+    unsigned int tarjan_ssc(const DirectedGraph &);
+    unsigned int nuutila_ssc(const DirectedGraph &);
 
 }
 
