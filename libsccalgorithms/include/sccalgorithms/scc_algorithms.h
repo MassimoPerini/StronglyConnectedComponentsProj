@@ -20,6 +20,12 @@ namespace sccalgorithms {
 
     unsigned int nuutila2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
     unsigned int nuutila2_ssc(const sccalgorithms::DirectedGraph &graph);
+
+    unsigned int pearce1_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
+    unsigned int pearce1_ssc(const sccalgorithms::DirectedGraph &graph);
+
+    unsigned int pearce2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
+    unsigned int pearce2_ssc(const sccalgorithms::DirectedGraph &graph);
 }
 
 #endif //SCC_SCC_ALGORITHMS_H

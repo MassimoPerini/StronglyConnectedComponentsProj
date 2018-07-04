@@ -53,3 +53,11 @@ TEST_F(ExampleGraphs, Nutilia1) {
 TEST_F(ExampleGraphs, Nutilia2) {
     ASSERT_EQ(0, sccalgorithms::nuutila2_ssc(tarjanGraph));
 }
+
+TEST_F(ExampleGraphs, Pearce1) {
+    ASSERT_EQ(0, sccalgorithms::pearce1_ssc(tarjanGraph));
+}
+
+TEST_F(ExampleGraphs, Pearce2) {
+    ASSERT_EQ(0, sccalgorithms::pearce2_ssc(tarjanGraph));
+}
