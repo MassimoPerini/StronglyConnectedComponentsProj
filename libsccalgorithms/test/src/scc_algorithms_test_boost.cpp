@@ -32,6 +32,12 @@ TEST_F(ExampleGraphs, BoostStrongComponents) {
     int num_components = boost::strong_components(tarjanGraph,
             boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
+    for (int i=0;i<boost::num_vertices(tarjanGraph);i++)
+    {
+        std::cout<<component[i]<<" ";
+    }
+    std::cout<<std::endl;
+
     ASSERT_EQ(3, num_components);
 }
 
@@ -40,6 +46,10 @@ TEST_F(ExampleGraphs, MyStrongComponents) {
 }
 
 
-TEST_F(ExampleGraphs, MyNutilia) {
-    ASSERT_EQ(0, sccalgorithms::nuutila_ssc(tarjanGraph));
+TEST_F(ExampleGraphs, Nutilia1) {
+    ASSERT_EQ(0, sccalgorithms::nuutila1_ssc(tarjanGraph));
+}
+
+TEST_F(ExampleGraphs, Nutilia2) {
+    ASSERT_EQ(0, sccalgorithms::nuutila2_ssc(tarjanGraph));
 }
