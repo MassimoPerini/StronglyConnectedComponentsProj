@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <stack>
-#include <jmorecfg.h>
 
 //using vertex_descriptor = boost::graph_traits<sccalgorithms::DirectedGraph>::vertex_descriptor;
 using namespace boost;
@@ -15,13 +14,7 @@ using namespace std;
 
 using vertex_descriptor = boost::graph_traits<sccalgorithms::DirectedGraph>::vertex_descriptor;
 
-
-unsigned sccalgorithms::strong_connected_components(const sccalgorithms::DirectedGraph &graph,
-                                                    const sccalgorithms::Vertex &start_node) {
-    return 0;
-}
-
-void nuutila1_visit(const vertex_descriptor node,
+unsigned int nuutila1_visit(const vertex_descriptor node,
                     int &depth,
                    const IndexMap &vertex_index_map,
                    const sccalgorithms::DirectedGraph &graph,
@@ -30,6 +23,7 @@ void nuutila1_visit(const vertex_descriptor node,
                    vector<bool> &index_components,
                    stack <int> &stack)
 {
+    unsigned int num_sccs = 0;
     int index = boost::get(vertex_index_map, node);
     root[index] = index;
     index_components[index] = false;
@@ -41,7 +35,7 @@ void nuutila1_visit(const vertex_descriptor node,
         if (visitation_index[index_2] < 1)//not visited -> explore
         {
             depth++;
-            nuutila1_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components, stack);
+            num_sccs += nuutila1_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components, stack);
         }
 
         if (!index_components[index_2])
@@ -53,6 +47,7 @@ void nuutila1_visit(const vertex_descriptor node,
 
     if (root[index] == index)
     {
+        num_sccs++;
         cout<<"NEW COMPONENT FOUND: "<<index;
         index_components[index] = true;
         if (!stack.empty()) {
@@ -72,13 +67,14 @@ void nuutila1_visit(const vertex_descriptor node,
     else {
         stack.push(index);  //oppure pushare il nodo direttamente e poi prendere al pop il suo index
     }
-    return;
+    return num_sccs;
 }
 
 
 unsigned int sccalgorithms::nuutila1_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
+    unsigned int num_sccs = 0;
     unsigned long l= num_vertices(graph);
     std::vector<int> roots(l);
     std::vector<unsigned int> visitation_indexes(l);
@@ -99,11 +95,11 @@ unsigned int sccalgorithms::nuutila1_ssc(const sccalgorithms::DirectedGraph &gra
             int int_value = boost::get(vertex_index_map,v);
             if (visitation_indexes[int_value] == 0)
             {
-                nuutila1_visit(v, depth,vertex_index_map, graph, visitation_indexes,roots, index_components, stack);
+                num_sccs += nuutila1_visit(v, depth,vertex_index_map, graph, visitation_indexes,roots, index_components, stack);
             }
         }
 
-    return 0;
+    return num_sccs;
 }
 
 unsigned int sccalgorithms::nuutila1_ssc(const sccalgorithms::DirectedGraph &graph)
@@ -114,7 +110,7 @@ unsigned int sccalgorithms::nuutila1_ssc(const sccalgorithms::DirectedGraph &gra
 
 
 
-void nuutila2_visit(const vertex_descriptor node,
+unsigned int nuutila2_visit(const vertex_descriptor node,
                     int &depth,
                     const IndexMap &vertex_index_map,
                     const sccalgorithms::DirectedGraph &graph,
@@ -124,6 +120,7 @@ void nuutila2_visit(const vertex_descriptor node,
                     stack <int> &stack,
                     vector<bool> &is_on_stack)
 {
+    unsigned int num_sccs = 0;
     int index = boost::get(vertex_index_map, node);
     root[index] = index;
     index_components[index] = false;
@@ -135,7 +132,7 @@ void nuutila2_visit(const vertex_descriptor node,
         if (visitation_index[index_2] < 1)//not visited -> explore
         {
             depth++;
-            nuutila2_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components, stack, is_on_stack);
+            num_sccs += nuutila2_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components, stack, is_on_stack);
         }
 
         if (!index_components[root[index_2]])
@@ -146,6 +143,7 @@ void nuutila2_visit(const vertex_descriptor node,
     }
 
     if (root[index] == index) {
+        num_sccs++;
         cout << endl << "NEW COMPONENT FOUND: " << index <<" IS THE ROOT (?)"<< endl;
         if (!stack.empty() && visitation_index[stack.top()] >= visitation_index[index]) {
             while (!stack.empty() && visitation_index[stack.top()] >= visitation_index[index]) {
@@ -161,13 +159,14 @@ void nuutila2_visit(const vertex_descriptor node,
         stack.push(root[index]);
         is_on_stack[root[index]] = true;
     }
-    return;
+    return num_sccs;
 }
 
 
 unsigned int sccalgorithms::nuutila2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
+    unsigned int num_sccs = 0;
     unsigned long l= num_vertices(graph);
     std::vector<int> roots(l);
     std::vector<unsigned int> visitation_indexes(l);
@@ -190,11 +189,11 @@ unsigned int sccalgorithms::nuutila2_ssc(const sccalgorithms::DirectedGraph &gra
             int int_value = boost::get(vertex_index_map,v);
             if (visitation_indexes[int_value] == 0)
             {
-                nuutila2_visit(v, depth,vertex_index_map, graph, visitation_indexes,roots, index_components, stack, is_on_stack);
+                 num_sccs += nuutila2_visit(v, depth,vertex_index_map, graph, visitation_indexes,roots, index_components, stack, is_on_stack);
             }
         }
 
-    return 0;
+    return num_sccs;
 }
 
 unsigned int sccalgorithms::nuutila2_ssc(const sccalgorithms::DirectedGraph &graph)
@@ -205,7 +204,7 @@ unsigned int sccalgorithms::nuutila2_ssc(const sccalgorithms::DirectedGraph &gra
 
 
 
-void pearce1_visit(const vertex_descriptor node,
+unsigned int pearce1_visit(const vertex_descriptor node,
                    int &depth,
                     const IndexMap &vertex_index_map,
                     const sccalgorithms::DirectedGraph &graph,
@@ -216,6 +215,7 @@ void pearce1_visit(const vertex_descriptor node,
                     int &c
                     )
 {
+    unsigned int num_sccs = 0;
     int index = boost::get(vertex_index_map, node);
     bool root = true;
     visited[index] = true;
@@ -228,7 +228,7 @@ void pearce1_visit(const vertex_descriptor node,
         if (!visited[index_2])//not visited -> explore
         {
             depth++;
-            pearce1_visit(vd, depth, vertex_index_map, graph, r_index, index_components, visited, stack, c);
+            num_sccs += pearce1_visit(vd, depth, vertex_index_map, graph, r_index, index_components, visited, stack, c);
         }
 
         if (!index_components[index_2] && r_index[index_2] < r_index[index])
@@ -239,6 +239,7 @@ void pearce1_visit(const vertex_descriptor node,
     }
 
     if (root) {
+        num_sccs++;
         index_components[index] = true;
         cout<<"New component found: "<<node;
         while (!stack.empty() && r_index[index] <= r_index[stack.top()])
@@ -256,13 +257,14 @@ void pearce1_visit(const vertex_descriptor node,
     else {
         stack.push(index);
     }
-    return;
+    return num_sccs;
 }
 
 
 unsigned int sccalgorithms::pearce1_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
+    unsigned int num_sccs = 0;
     unsigned long l= num_vertices(graph);
 
     std::vector<int>  r_index(l);
@@ -286,11 +288,11 @@ unsigned int sccalgorithms::pearce1_ssc(const sccalgorithms::DirectedGraph &grap
             int int_value = boost::get(vertex_index_map,v);
             if (!visited[int_value])
             {
-                pearce1_visit(v, depth,vertex_index_map, graph, r_index, index_components, visited, stack, c);
+                num_sccs += pearce1_visit(v, depth,vertex_index_map, graph, r_index, index_components, visited, stack, c);
             }
         }
 
-    return 0;
+    return num_sccs;
 }
 
 unsigned int sccalgorithms::pearce1_ssc(const sccalgorithms::DirectedGraph &graph)
@@ -300,7 +302,7 @@ unsigned int sccalgorithms::pearce1_ssc(const sccalgorithms::DirectedGraph &grap
 
 
 
-void pearce2_visit(const vertex_descriptor node,
+unsigned int pearce2_visit(const vertex_descriptor node,
                    const IndexMap &vertex_index_map,
                    const sccalgorithms::DirectedGraph &graph,
                    vector<int> &r_index,
@@ -309,6 +311,7 @@ void pearce2_visit(const vertex_descriptor node,
                    int &index_component
 )
 {
+    unsigned int num_sccs = 0;
     int index = boost::get(vertex_index_map, node);
     bool root = true;
     r_index[index] = index_component;
@@ -320,7 +323,7 @@ void pearce2_visit(const vertex_descriptor node,
 
         if (r_index[index_2] == 0)
         {
-            pearce2_visit(vd, vertex_index_map, graph, r_index, stack, c, index_component);
+            num_sccs += pearce2_visit(vd, vertex_index_map, graph, r_index, stack, c, index_component);
         }
         if (r_index[index_2] < r_index[index])
         {
@@ -330,6 +333,7 @@ void pearce2_visit(const vertex_descriptor node,
     }
 
     if (root) {
+        num_sccs++;
         index_component --;
         cout<<"New component found: "<<node;
         while (!stack.empty() && r_index[index] <= r_index[stack.top()])
@@ -347,13 +351,14 @@ void pearce2_visit(const vertex_descriptor node,
     else {
         stack.push(index);
     }
-    return;
+    return num_sccs;
 }
 
 
 unsigned int sccalgorithms::pearce2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
+    unsigned int num_sccs = 0;
     unsigned long l= num_vertices(graph);
 
     std::vector<int>  r_index(l);
@@ -372,21 +377,14 @@ unsigned int sccalgorithms::pearce2_ssc(const sccalgorithms::DirectedGraph &grap
             int int_value = boost::get(vertex_index_map,v);
             if (r_index[int_value] == 0)
             {
-                pearce2_visit(v,vertex_index_map, graph, r_index, stack, c, index);
+                num_sccs += pearce2_visit(v,vertex_index_map, graph, r_index, stack, c, index);
             }
         }
 
-    return 0;
+    return num_sccs;
 }
 
 unsigned int sccalgorithms::pearce2_ssc(const sccalgorithms::DirectedGraph &graph)
 {
     return sccalgorithms::pearce2_ssc(graph, boost::get(boost::vertex_index, graph));
-}
-
-
-
-unsigned int sccalgorithms::tarjan_ssc(const sccalgorithms::DirectedGraph &)
-{
-    return 0;
 }

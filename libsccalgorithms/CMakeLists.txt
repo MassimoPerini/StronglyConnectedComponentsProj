@@ -3,7 +3,8 @@ find_package(Boost CONFIG REQUIRED graph)
 
 add_library(SCCAlgorithms
         src/scc_algorithms.cpp
-        src/scc_utils.cpp)
+        src/scc_utils.cpp
+        src/scc_algorithms_tarjan.cpp)
 
 add_library(SCCAlgorithms::sccalgorithms
         ALIAS

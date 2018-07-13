@@ -42,22 +42,22 @@ TEST_F(ExampleGraphs, BoostStrongComponents) {
 }
 
 TEST_F(ExampleGraphs, MyStrongComponents) {
-    ASSERT_EQ(-1, sccalgorithms::strong_connected_components(tarjanGraph, 0));
+    ASSERT_EQ(3, sccalgorithms::tarjan_scc(tarjanGraph));
 }
 
 
 TEST_F(ExampleGraphs, Nutilia1) {
-    ASSERT_EQ(0, sccalgorithms::nuutila1_ssc(tarjanGraph));
+    ASSERT_EQ(3, sccalgorithms::nuutila1_ssc(tarjanGraph));
 }
 
 TEST_F(ExampleGraphs, Nutilia2) {
-    ASSERT_EQ(0, sccalgorithms::nuutila2_ssc(tarjanGraph));
+    ASSERT_EQ(3, sccalgorithms::nuutila2_ssc(tarjanGraph));
 }
 
 TEST_F(ExampleGraphs, Pearce1) {
-    ASSERT_EQ(0, sccalgorithms::pearce1_ssc(tarjanGraph));
+    ASSERT_EQ(3, sccalgorithms::pearce1_ssc(tarjanGraph));
 }
 
 TEST_F(ExampleGraphs, Pearce2) {
-    ASSERT_EQ(0, sccalgorithms::pearce2_ssc(tarjanGraph));
+    ASSERT_EQ(3, sccalgorithms::pearce2_ssc(tarjanGraph));
 }
