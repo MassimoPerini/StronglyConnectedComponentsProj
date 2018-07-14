@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9.2)
 
 # Hunter, a cross-platform cmake package manager
 # www.github.com/ruslo/hunter
