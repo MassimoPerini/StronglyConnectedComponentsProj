@@ -30,7 +30,7 @@ void out_usage(ostream &, const string &, const map<string, string> &);
 int main(int argc, char* argv[]) {
 
     if (argc < PARAMS_HELP.size()) {
-        if (argc == 2 && (argv[1] == "--help" || argv[1] == "-h")) {
+        if (argc == 2 && (strcmp("--help", argv[1]) == 0 || strcmp("-h", argv[1]) == 0)) {
             out_usage(cout, argv[0], PARAMS_HELP);
             return EXIT_SUCCESS;
         }
