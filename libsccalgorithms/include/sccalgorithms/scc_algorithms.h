@@ -20,16 +20,24 @@ namespace sccalgorithms {
     }
 
     unsigned int nuutila1_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
-    unsigned int nuutila1_ssc(const sccalgorithms::DirectedGraph &graph);
+    inline unsigned int nuutila1_ssc(const sccalgorithms::DirectedGraph &graph){
+        return sccalgorithms::nuutila1_ssc(graph, boost::get(boost::vertex_index, graph));
+    }
 
     unsigned int nuutila2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
-    unsigned int nuutila2_ssc(const sccalgorithms::DirectedGraph &graph);
+    inline unsigned int nuutila2_ssc(const sccalgorithms::DirectedGraph &graph){
+        return sccalgorithms::nuutila2_ssc(graph, boost::get(boost::vertex_index, graph));
+    }
 
     unsigned int pearce1_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
-    unsigned int pearce1_ssc(const sccalgorithms::DirectedGraph &graph);
+    inline unsigned int pearce1_ssc(const sccalgorithms::DirectedGraph &graph){
+        return sccalgorithms::pearce1_ssc(graph, boost::get(boost::vertex_index, graph));
+    }
 
     unsigned int pearce2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
-    unsigned int pearce2_ssc(const sccalgorithms::DirectedGraph &graph);
+    inline unsigned int pearce2_ssc(const sccalgorithms::DirectedGraph &graph){
+        return sccalgorithms::pearce2_ssc(graph, boost::get(boost::vertex_index, graph));
+    }
 }
 
 #endif //SCC_SCC_ALGORITHMS_H
