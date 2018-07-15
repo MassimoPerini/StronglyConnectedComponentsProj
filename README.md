@@ -29,4 +29,3 @@ For example the comand:
 ```
 
 Will run the scc algorithms on several random graphs, generated with 2 to 100 verteces (scattering by 2 units), with edges probability from 0.01 to 0.51 (increasing by 0.01)
->>>>>>> Reports run instructions
