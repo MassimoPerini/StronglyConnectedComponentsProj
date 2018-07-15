@@ -3,11 +3,11 @@
 #include <string>
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/depth_first_search.hpp>
-
 #include <sccalgorithms/scc_utils.h>
 #include <sccalgorithms/scc_algorithms.h>
 #include <scc_reports.h>
 #include <boost/lexical_cast.hpp>
+#include <console_formatter.h>
 
 using namespace std;
 using namespace sccalgorithms;
@@ -60,13 +60,15 @@ int main(int argc, char* argv[]) {
     }
 
     scc_reports report(minV, maxV, offsetV, minDensity, maxDensity, offsetDensity);
-    report.run({
+    console_formatter consoleReport(report.run({
             [](const DirectedGraph & g) { return tarjan_scc(g);   },
             [](const DirectedGraph & g) { return nuutila1_ssc(g); },
             [](const DirectedGraph & g) { return nuutila2_ssc(g); },
             [](const DirectedGraph & g) { return pearce1_ssc(g);  },
             [](const DirectedGraph & g) { return pearce2_ssc(g);  },
-    });
+    }), {"tarjan", "nuutila1", "nuutila2", "pearce1", "pearce2" });
+
+    cout << consoleReport;
 
     return EXIT_SUCCESS;
 }

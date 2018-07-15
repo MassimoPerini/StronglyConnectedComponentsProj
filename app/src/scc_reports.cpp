@@ -8,12 +8,11 @@
 
 typedef boost::erdos_renyi_iterator<boost::minstd_rand, sccalgorithms::DirectedGraph> ERGen;
 
-std::vector<std::tuple<unsigned, unsigned, unsigned, std::vector<std::tuple<unsigned, bool> > > >
+std::vector<scc_record>
         scc_reports::run(const std::vector<std::function<unsigned(const sccalgorithms::DirectedGraph &)>> & algorithms) {
 
     // save records here
-    std::vector<std::tuple<unsigned, unsigned, unsigned, std::vector<std::tuple<unsigned, bool> > > > results(
-            count_linspace_elements<unsigned>(minV, maxV, offsetV) * count_linspace_elements<float>(minDensity, maxDensity, offsetDensity));
+    std::vector<scc_record> results;
 
     boost::minstd_rand gen;
 
@@ -26,7 +25,7 @@ std::vector<std::tuple<unsigned, unsigned, unsigned, std::vector<std::tuple<unsi
             unsigned boost_num_sccs = boost::strong_components(randomGraph,
                     boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, randomGraph)));
 
-            std::vector<std::tuple<unsigned, bool> > algorithms_result(algorithms.size());
+            std::vector<std::tuple<unsigned, bool> > algorithms_result;
             for (auto & algorithm : algorithms) { // for each algorithm that computes scc given
                 std::chrono::high_resolution_clock::time_point t1, t2;
                 t1 = std::chrono::high_resolution_clock::now();
@@ -44,4 +43,12 @@ std::vector<std::tuple<unsigned, unsigned, unsigned, std::vector<std::tuple<unsi
     }
 
     return results;
+}
+
+std::ostream &operator<<(std::ostream & os, const report_formatter & rf) {
+    rf.print_header(os);
+    for (const auto & record : rf.records)
+        rf.print_record(os, record);
+
+    return os;
 }
