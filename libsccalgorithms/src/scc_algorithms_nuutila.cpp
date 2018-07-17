@@ -49,12 +49,12 @@ unsigned int nuutila1_visit(const sccalgorithms::Vertex &node,
     if (root[index] == index)
     {
         num_sccs++;
-        cout<<"NEW COMPONENT FOUND: "<<index;
+        //cout<<"NEW COMPONENT FOUND: "<<index;
         index_components[index] = true;
         if (!stack.empty()) {
             int old_index = stack.top();
             while (visitation_index[old_index] > visitation_index [index]) {
-                cout << " , " << old_index;
+                //cout << " , " << old_index;
                 index_components[old_index] = true;
                 stack.pop();
                 if (stack.empty()) {
@@ -63,7 +63,7 @@ unsigned int nuutila1_visit(const sccalgorithms::Vertex &node,
                 old_index = stack.top();
             }
         }
-        cout<<endl;
+        //cout<<endl;
     }
     else {
         stack.push(index);  //oppure pushare il nodo direttamente e poi prendere al pop il suo index
@@ -92,7 +92,7 @@ unsigned int sccalgorithms::nuutila1_ssc(const sccalgorithms::DirectedGraph &gra
 
     BGL_FORALL_VERTICES(v, graph, DirectedGraph)
         {
-            std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
+            //std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
             int int_value = boost::get(vertex_index_map,v);
             if (visitation_indexes[int_value] == 0)
             {
@@ -140,7 +140,7 @@ unsigned int nuutila2_visit(const sccalgorithms::Vertex &node,
 
     if (root[index] == index) {
         num_sccs++;
-        cout << endl << "NEW COMPONENT FOUND: " << index <<" IS THE ROOT (?)"<< endl;
+        //cout << endl << "NEW COMPONENT FOUND: " << index <<" IS THE ROOT (?)"<< endl;
         if (!stack.empty() && visitation_index[stack.top()] >= visitation_index[index]) {
             while (!stack.empty() && visitation_index[stack.top()] >= visitation_index[index]) {
                 index_components[stack.top()] = true;
@@ -181,7 +181,7 @@ unsigned int sccalgorithms::nuutila2_ssc(const sccalgorithms::DirectedGraph &gra
 
     BGL_FORALL_VERTICES(v, graph, DirectedGraph)
         {
-            std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
+            //std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
             int int_value = boost::get(vertex_index_map,v);
             if (visitation_indexes[int_value] == 0)
             {

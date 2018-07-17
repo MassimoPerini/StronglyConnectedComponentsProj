@@ -25,7 +25,7 @@ unsigned helper_scc_tarjan(const sccalgorithms::DirectedGraph & graph,
     boost::put(numbers, v, ++i);
     boost::put(lowpts, v, i);
     boost::put(lowvines, v, i);
-//    boost::put(is_on_stack, v, true);
+    boost::put(is_on_stack, v, true);
     visited.push(v);
 
     unsigned int num_sccs = 0;
@@ -41,14 +41,14 @@ unsigned helper_scc_tarjan(const sccalgorithms::DirectedGraph & graph,
                        std::min(boost::get(lowvines, v),
                                 boost::get(lowvines, w)));
         } else if (boost::get(lowpts, w) == boost::get(numbers, w) && // v is anchestor of w
-                   boost::get(numbers, w) < boost::get(numbers, v) /*&&
-                   boost::get(is_on_stack, w)*/) {
+                   boost::get(numbers, w) < boost::get(numbers, v) &&
+                   boost::get(is_on_stack, w)) {
             boost::put(lowpts, v,
                        std::min(
                                boost::get(lowpts, v),
                                boost::get(numbers, w)));
-        } else if (boost::get(numbers, w) < boost::get(numbers, v) /*&&
-                   boost::get(is_on_stack, w)*/) {
+        } else if (boost::get(numbers, w) < boost::get(numbers, v) &&
+                   boost::get(is_on_stack, w)) {
             boost::put(lowvines, v,
                        std::min(
                                boost::get(lowvines, v),
@@ -60,7 +60,7 @@ unsigned helper_scc_tarjan(const sccalgorithms::DirectedGraph & graph,
        boost::get(lowvines, v) == boost::get(numbers, v)) {
         // start new connected componet
         while (!visited.empty() && boost::get(numbers, visited.top()) >= boost::get(numbers, v)) {
-            //boost::put(is_on_stack, visited.top(), false);
+            boost::put(is_on_stack, visited.top(), false);
             visited.pop();
         }
 

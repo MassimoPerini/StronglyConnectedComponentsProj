@@ -54,18 +54,18 @@ unsigned int pearce1_visit(const sccalgorithms::Vertex &node,
     if (root) {
         num_sccs++;
         index_components[index] = true;
-        cout<<"New component found: "<<node;
+        //cout<<"New component found: "<<node;
         while (!stack.empty() && r_index[index] <= r_index[stack.top()])
         {
             int index_2 = stack.top();
             stack.pop();
             r_index[index_2] = c;
             index_components[index_2] = true;
-            cout<<", "<<index_2;
+            //cout<<", "<<index_2;
         }
         r_index[index] = c;
         c++;
-        cout<<endl;
+        //cout<<endl;
     }
     else {
         stack.push(index);
@@ -97,7 +97,7 @@ unsigned int sccalgorithms::pearce1_ssc(const sccalgorithms::DirectedGraph &grap
 
     BGL_FORALL_VERTICES(v, graph, DirectedGraph)
         {
-            std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
+            //std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
             int int_value = boost::get(vertex_index_map,v);
             if (!visited[int_value])
             {
@@ -143,18 +143,18 @@ unsigned int pearce2_visit(const sccalgorithms::Vertex &node,
     if (root) {
         num_sccs++;
         index_component --;
-        cout<<"New component found: "<<node;
+        //cout<<"New component found: "<<node;
         while (!stack.empty() && r_index[index] <= r_index[stack.top()])
         {
             int index_2 = stack.top();
             stack.pop();
             r_index[index_2] = c;
             index_component --;
-            cout<<", "<<index_2;
+            //cout<<", "<<index_2;
         }
         r_index[index] = c;
         c--;
-        cout<<endl;
+        //cout<<endl;
     }
     else {
         stack.push(index);
@@ -181,7 +181,7 @@ unsigned int sccalgorithms::pearce2_ssc(const sccalgorithms::DirectedGraph &grap
 
     BGL_FORALL_VERTICES(v, graph, DirectedGraph)
         {
-            std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
+            //std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
             int int_value = boost::get(vertex_index_map,v);
             if (r_index[int_value] == 0)
             {
