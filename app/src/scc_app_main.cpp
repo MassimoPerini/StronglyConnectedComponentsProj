@@ -8,6 +8,12 @@
 #include <scc_reports.h>
 #include <boost/lexical_cast.hpp>
 #include <console_formatter.h>
+#include <csv_formatter.h>
+
+#include <boost/graph/strong_components.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <vector>
+#include <fstream>
 
 using namespace std;
 using namespace sccalgorithms;
@@ -21,6 +27,8 @@ const map<string, string> PARAMS_HELP = {
         {"<MAX_DENSITY>",    "The maximum density value used to populate graph edges"},
         {"<OFFSET_DENSITY>", "The increment of density between one generated graph and next one."}
 };
+
+constexpr char OUTPUT_FILENAME[] = "report.csv";
 
 /**
  * Prints program usage.
@@ -60,16 +68,29 @@ int main(int argc, char* argv[]) {
     }
 
     scc_reports report(minV, maxV, offsetV, minDensity, maxDensity, offsetDensity);
-    console_formatter consoleReport(report.run({
-            [](const DirectedGraph & g) { return tarjan_scc(g);   },
-            [](const DirectedGraph & g) { return nuutila1_ssc(g); },
-            [](const DirectedGraph & g) { return nuutila2_ssc(g); },
-            [](const DirectedGraph & g) { return pearce1_ssc(g);  },
-            [](const DirectedGraph & g) { return pearce2_ssc(g);  },
-    }), {"tarjan", "nuutila1", "nuutila2", "pearce1", "pearce2" });
+    const auto records = report.run({
+        [](const DirectedGraph & g) {
+            vector<int> component(num_vertices(g));
+            unsigned int boost_num_sccs = strong_components(g,
+                make_iterator_property_map(component.begin(), get(vertex_index, g)));
+            return boost_num_sccs;
+        },
+        [](const DirectedGraph & g) { return tarjan_scc(g);   },
+        [](const DirectedGraph & g) { return nuutila1_ssc(g); },
+        [](const DirectedGraph & g) { return nuutila2_ssc(g); },
+        [](const DirectedGraph & g) { return pearce1_ssc(g);  },
+        [](const DirectedGraph & g) { return pearce2_ssc(g);  },
+    });
+    const vector<string> algorithms_names{"boost_tarjan", "tarjan", "nuutila1", "nuutila2", "pearce1", "pearce2"};
 
+    console_formatter consoleReport(records, algorithms_names);
     cout << consoleReport;
 
+    csv_formatter fileReport(records, algorithms_names);
+    ofstream outputStream(OUTPUT_FILENAME, std::ofstream::out);
+    outputStream << fileReport;
+    outputStream.close();
+    cout << "\nWritten report to file: " << OUTPUT_FILENAME << endl;
     return EXIT_SUCCESS;
 }
 
