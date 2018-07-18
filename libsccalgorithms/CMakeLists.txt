@@ -22,8 +22,15 @@ target_link_libraries(SCCAlgorithms
         PUBLIC
             Boost::graph)
 
-option(SCC_ALGORITHM_BUILD_TEST "Build also library tests" ON)
+option(SCC_ALGORITHMS_COVERAGE "Enable to generate coverage reports on sccalgorithms library" OFF)
+if(CMAKE_BUILD_TYPE MATCHES Debug AND SCC_ALGORITHMS_COVERAGE)
+    include(CodeCoverage)
+    SCC_APP_COMPILE_WITH_COV(SCCAlgorithms)
+endif() # SCC_ALGORITHMS_COVERAGE
+
+option(SCC_ALGORITHM_BUILD_TEST "Build also library tests" OFF)
 if(SCC_ALGORITHM_BUILD_TEST)
     enable_testing()
     add_subdirectory(test)
-endif()
+endif() # SCC_ALGORITHM_BUILD_TEST
+

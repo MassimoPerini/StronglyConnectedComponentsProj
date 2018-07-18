@@ -15,3 +15,10 @@ target_include_directories(SCCApp
 target_link_libraries(SCCApp
         PUBLIC
             SCCAlgorithms::sccalgorithms)
+
+option(SCC_APP_COVERAGE "Enable if you want to generate coverage reports" OFF)
+set(SCC_APP_COVERAGE_ARGV "100 101 2 0.01 0.2 0.2" CACHE STRING "Parameters for program runned in coverage")
+if(CMAKE_BUILD_TYPE MATCHES Debug AND SCC_APP_COVERAGE)
+    include(CodeCoverage)
+    scc_app_add_coverage_to(SCCApp coverage ${SCC_APP_COVERAGE_ARGV})
+endif()
