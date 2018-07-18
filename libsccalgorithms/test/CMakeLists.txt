@@ -10,3 +10,8 @@ target_link_libraries(SCCAlgorithms_test
         SCCAlgorithms::sccalgorithms)
 
 add_test(TestLibSccAlgorithms SCCAlgorithms_test)
+
+if(CMAKE_BUILD_TYPE MATCHES Debug AND SCC_ALGORITHMS_COVERAGE)
+    include(CodeCoverage)
+    scc_app_add_coverage_to(SCCAlgorithms_test test_coverage)
+endif() # SCC_ALGORITHMS_COVERAGE
