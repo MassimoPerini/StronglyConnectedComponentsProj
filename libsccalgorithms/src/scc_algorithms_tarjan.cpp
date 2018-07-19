@@ -70,7 +70,7 @@ unsigned helper_scc_tarjan(const sccalgorithms::DirectedGraph & graph,
     return num_sccs;
 }
 
-unsigned int sccalgorithms::tarjan_ssc(const DirectedGraph & graph, IndexMap vertex_index_map) {
+unsigned int sccalgorithms::tarjan_scc(const DirectedGraph & graph, IndexMap vertex_index_map) {
     unsigned number_of_sccs = 0;
 
     // LOWPT, LOWVINE exterior pointer properties

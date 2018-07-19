@@ -48,19 +48,20 @@ TEST_F(ExampleGraphs, MyStrongComponents) {
 
 
 TEST_F(ExampleGraphs, Nutilia1) {
-    ASSERT_EQ(3, sccalgorithms::nuutila1_ssc(tarjanGraph));
+    ASSERT_EQ(3, sccalgorithms::nuutila1_scc(tarjanGraph));
 }
 
 TEST_F(ExampleGraphs, Nutilia2) {
-    ASSERT_EQ(3, sccalgorithms::nuutila2_ssc(tarjanGraph));
+    ASSERT_EQ(3, sccalgorithms::nuutila2_scc(tarjanGraph));
 }
 
 TEST_F(ExampleGraphs, Pearce1) {
-    ASSERT_EQ(3, sccalgorithms::pearce1_ssc(tarjanGraph));
+    ASSERT_EQ(3, sccalgorithms::pearce1_scc(tarjanGraph));
 }
 
 TEST_F(ExampleGraphs, Pearce2) {
-    ASSERT_EQ(3, sccalgorithms::pearce2_ssc(tarjanGraph));
+<<<<<<< HEAD
+    ASSERT_EQ(3, sccalgorithms::pearce2_scc(tarjanGraph));
 }
 
 TEST_F(ExampleGraphs, Nuutila1Iterative){

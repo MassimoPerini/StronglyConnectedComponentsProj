@@ -74,7 +74,7 @@ unsigned int pearce1_visit(const sccalgorithms::Vertex &node,
 }
 
 
-unsigned int sccalgorithms::pearce1_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
+unsigned int sccalgorithms::pearce1_scc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
     unsigned int num_sccs = 0;
@@ -163,7 +163,7 @@ unsigned int pearce2_visit(const sccalgorithms::Vertex &node,
 }
 
 
-unsigned int sccalgorithms::pearce2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
+unsigned int sccalgorithms::pearce2_scc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
     unsigned int num_sccs = 0;

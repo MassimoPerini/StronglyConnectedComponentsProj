@@ -72,7 +72,7 @@ unsigned int nuutila1_visit(const sccalgorithms::Vertex &node,
 }
 
 
-unsigned int sccalgorithms::nuutila1_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
+unsigned int sccalgorithms::nuutila1_scc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
     unsigned int num_sccs = 0;
@@ -159,7 +159,7 @@ unsigned int nuutila2_visit(const sccalgorithms::Vertex &node,
 }
 
 
-unsigned int sccalgorithms::nuutila2_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
+unsigned int sccalgorithms::nuutila2_scc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 
     unsigned int num_sccs = 0;

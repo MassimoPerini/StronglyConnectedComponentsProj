@@ -42,10 +42,10 @@ public:
     friend std::ostream& operator<<(std::ostream &, const report_formatter &);
 
 private:
-    const std::vector<scc_record> records;
+    const std::vector<scc_record> & records;
 
 protected:
-    const std::vector<std::string> algorithms_names;
+    const std::vector<std::string> & algorithms_names;
 };
 
 std::ostream& operator<<(std::ostream&, const report_formatter&);
