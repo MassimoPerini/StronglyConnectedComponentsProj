@@ -1,4 +1,5 @@
 hunter_add_package(Boost COMPONENTS graph)
+
 find_package(Boost CONFIG REQUIRED graph)
 
 add_executable(SCCApp

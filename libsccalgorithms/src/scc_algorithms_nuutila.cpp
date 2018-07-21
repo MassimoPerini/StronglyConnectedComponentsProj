@@ -122,7 +122,7 @@ unsigned int nuutila2_visit(const sccalgorithms::Vertex &node,
     index_components[index] = false;
     visitation_index [index] = depth;
 
-    for (auto vd : boost::make_iterator_range(adjacent_vertices(node, graph)))  //cosa cambia tra inv e non inv?
+    for (sccalgorithms::Vertex vd : boost::make_iterator_range(adjacent_vertices(node, graph)))  //cosa cambia tra inv e non inv?
     {
         int index_2 = boost::get(vertex_index_map,vd);
         if (visitation_index[index_2] < 1)//not visited -> explore

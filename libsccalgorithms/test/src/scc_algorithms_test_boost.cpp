@@ -3,6 +3,7 @@
 #include <boost/graph/strong_components.hpp>
 #include <vector>
 #include "sccalgorithms/scc_algorithms.h"
+#include <iostream>
 
 /**
  * Test fixture containing example graphs
@@ -60,4 +61,8 @@ TEST_F(ExampleGraphs, Pearce1) {
 
 TEST_F(ExampleGraphs, Pearce2) {
     ASSERT_EQ(3, sccalgorithms::pearce2_ssc(tarjanGraph));
+}
+
+TEST_F(ExampleGraphs, Nuutila1Iterative){
+    ASSERT_EQ(3, sccalgorithms::nuutila1_iterative_ssc(tarjanGraph));
 }

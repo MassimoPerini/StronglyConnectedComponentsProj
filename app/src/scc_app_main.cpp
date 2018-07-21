@@ -15,6 +15,11 @@
 #include <vector>
 #include <fstream>
 
+
+#include <iostream>
+#include <fstream>
+
+
 using namespace std;
 using namespace sccalgorithms;
 using namespace boost;
@@ -45,6 +50,7 @@ int main(int argc, char* argv[]) {
 
         cerr << "Error: not enough params passed, " << PARAMS_HELP.size() << " params needed.\n";
         cerr << "Checks `" << argv[0] << " --help` for usage help." << endl;
+
         return EXIT_FAILURE;
     };
 
