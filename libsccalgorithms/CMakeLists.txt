@@ -5,7 +5,8 @@ add_library(SCCAlgorithms
         src/scc_algorithms_pearce.cpp
         src/scc_algorithms_nuutila.cpp
         src/scc_utils.cpp
-        src/iterative/scc_algorithms_nuutila_iterative.cpp
+        src/iterative/scc_algorithms_nuutila1_iterative.cpp
+        src/iterative/scc_algorithms_nuutila2_iterative.cpp
         src/scc_algorithms_tarjan.cpp)
 
 add_library(SCCAlgorithms::sccalgorithms

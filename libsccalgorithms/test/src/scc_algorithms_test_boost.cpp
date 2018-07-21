@@ -66,3 +66,7 @@ TEST_F(ExampleGraphs, Pearce2) {
 TEST_F(ExampleGraphs, Nuutila1Iterative){
     ASSERT_EQ(3, sccalgorithms::nuutila1_iterative_ssc(tarjanGraph));
 }
+
+TEST_F(ExampleGraphs, Nuutila2Iterative){
+    ASSERT_EQ(3, sccalgorithms::nuutila2_iterative_ssc(tarjanGraph));
+}

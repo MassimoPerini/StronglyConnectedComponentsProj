@@ -100,13 +100,13 @@ int visit_loop(const sccalgorithms::Vertex &node,
     if (root[vertex_index] == vertex_index)
     {
         count = 1;
-        cout<<"NEW COMPONENT FOUND: "<<vertex_index;
+        //cout<<"NEW COMPONENT FOUND: "<<vertex_index;
         index_components[vertex_index] = true;
 
         if (!stack1.empty()) {
             int old_index = stack1.top();
             while (visitation_index[old_index] > visitation_index [vertex_index]) {
-                cout << " , " << old_index;
+                //cout << " , " << old_index;
                 index_components[old_index] = true;
                 stack1.pop();
                 if (stack1.empty()) {
@@ -115,7 +115,7 @@ int visit_loop(const sccalgorithms::Vertex &node,
                 old_index = stack1.top();
             }
         }
-        cout<<endl;
+        //cout<<endl;
     }
     else{
         stack1.push(vertex_index);

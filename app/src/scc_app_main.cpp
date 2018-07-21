@@ -84,10 +84,12 @@ int main(int argc, char* argv[]) {
         [](const DirectedGraph & g) { return tarjan_scc(g);   },
         [](const DirectedGraph & g) { return nuutila1_ssc(g); },
         [](const DirectedGraph & g) { return nuutila2_ssc(g); },
+        [](const DirectedGraph & g) { return nuutila1_iterative_ssc(g); },
+        [](const DirectedGraph & g) { return nuutila2_iterative_ssc(g); },
         [](const DirectedGraph & g) { return pearce1_ssc(g);  },
         [](const DirectedGraph & g) { return pearce2_ssc(g);  },
     });
-    const vector<string> algorithms_names{"boost_tarjan", "tarjan", "nuutila1", "nuutila2", "pearce1", "pearce2"};
+    const vector<string> algorithms_names{"boost_tarjan", "tarjan", "nuutila1", "nuutila2", "iterative_nuutila1","iterative_nuutila2","pearce1", "pearce2"};
 
     console_formatter consoleReport(records, algorithms_names);
     cout << consoleReport;
