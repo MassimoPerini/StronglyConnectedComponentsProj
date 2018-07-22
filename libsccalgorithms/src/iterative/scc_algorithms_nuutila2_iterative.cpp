@@ -35,26 +35,21 @@ int visit_loop(const sccalgorithms::Vertex &node,
                stack <int> &stack1,
                vector<bool> &is_on_stack,
                stack<sccalgorithms::Vertex> &vS,
-               stack <pair <pair <adj_iterator, adj_iterator >, bool> >&iS)
+               stack <pair <adj_iterator, adj_iterator > >&iS)
 
 {
     sccalgorithms::Vertex v = vS.top();
-    pair <pair <adj_iterator, adj_iterator >, bool> info;
+    pair <adj_iterator, adj_iterator > info;
 
     int vertex_index = boost::get(vertex_index_map, v);
 
-    while (iS.top().first.first != iS.top().first.second) //I need to check a subgraph
+    while (iS.top().first != iS.top().second) //I need to check a subgraph
     {
+        sccalgorithms::Vertex new_node = (*(iS.top().first));
+        int index = boost::get(vertex_index_map, new_node);
+
         // avoid the first time of each node (the first child is not visited). THE SAME node has already been visited
-        if (!iS.top().second) {
-            sccalgorithms::Vertex new_node = (*(iS.top().first.first));
-            int index = boost::get(vertex_index_map, new_node);
-
-            if (visitation_index[index] < 1) {
-                cout << "PROBLEM!!!" << endl;
-                break;
-            }
-
+        if (visitation_index[index] >= 1) {
             if (!index_components[root[index]]) {
                 if (visitation_index[root[index]] < visitation_index[root[vertex_index]])
                     root[vertex_index] = root[index];
@@ -63,22 +58,16 @@ int visit_loop(const sccalgorithms::Vertex &node,
             //I checked this subgraph
             //next step with iterator
             info = iS.top();
-            adj_iterator nxt = boost::next(info.first.first);
-            info.first.first = nxt;
+            adj_iterator nxt = boost::next(info.first);
+            info.first = nxt;
             iS.pop();
             iS.push(info);
 
         }
 
-        if (iS.top().first.first != iS.top().first.second) {
+        if (iS.top().first != iS.top().second) {
 
-            info = iS.top();
-            if (info.second) {
-                info.second = false;
-                iS.pop();
-                iS.push(info);
-            }
-            sccalgorithms::Vertex new_node = (*(iS.top().first.first));
+            sccalgorithms::Vertex new_node = (*(iS.top().first));
             int index = boost::get(vertex_index_map, new_node);
 
             if (visitation_index[index] < 1) { //not explored
@@ -88,7 +77,7 @@ int visit_loop(const sccalgorithms::Vertex &node,
                 traversal_counter++;
 
                 vS.push(new_node);
-                iS.push(std::make_pair(adjacent_vertices(new_node, graph), true));
+                iS.push(adjacent_vertices(new_node, graph));
 
                 return 0;
             }
@@ -141,7 +130,7 @@ unsigned int sccalgorithms::nuutila2_iterative_ssc(const sccalgorithms::Directed
 
     std::stack <int> stack;
     std::stack <sccalgorithms::Vertex> vS;
-    std::stack <pair <pair <adj_iterator, adj_iterator >, bool> > iS;
+    std::stack <pair <adj_iterator, adj_iterator > > iS;
 
     for (int i = 0;i<l;i++)
     {
@@ -157,7 +146,7 @@ unsigned int sccalgorithms::nuutila2_iterative_ssc(const sccalgorithms::Directed
             if (visitation_index[int_value] == 0)
             {
                 vS.push(v);
-                iS.push(std::make_pair(adjacent_vertices(v, graph), true));
+                iS.push(adjacent_vertices(v, graph));
 
                 index_components[int_value] = false;
                 roots[int_value] = int_value;
