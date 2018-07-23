@@ -49,6 +49,12 @@ namespace sccalgorithms {
         return sccalgorithms::nuutila1_iterative_ssc(graph, boost::get(boost::vertex_index, graph));
     }
 
+    unsigned int pearce2_iterative_ssc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
+    inline unsigned int pearce2_iterative_ssc(const sccalgorithms::DirectedGraph &graph) {
+        return sccalgorithms::pearce2_iterative_ssc(graph, boost::get(boost::vertex_index, graph));
+    }
+
+
 }
 
 #endif //SCC_SCC_ALGORITHMS_H
