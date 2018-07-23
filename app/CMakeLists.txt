@@ -4,7 +4,7 @@ find_package(Boost CONFIG REQUIRED graph)
 
 add_executable(SCCApp
         src/scc_app_main.cpp
-        src/scc_reports.cpp include/console_formatter.h)
+        src/scc_reports.cpp)
 
 target_include_directories(SCCApp
         PUBLIC

@@ -5,6 +5,7 @@
 #include <functional>
 #include <tuple>
 #include <sccalgorithms/scc_algorithms.h>
+#include <sccalgorithms/scc_algorithm.h>
 
 typedef std::tuple<unsigned, unsigned, unsigned, std::vector<std::tuple<unsigned, bool> > > scc_record;
 
@@ -19,7 +20,7 @@ public:
                                                                 offsetDensity(offsetDensity) {}
 
     std::vector<scc_record>
-            run(const std::vector<std::function<unsigned(const sccalgorithms::DirectedGraph &)> > &);
+            run(std::vector<sccalgorithms::scc_algorithm> &);
 
 private:
     unsigned minV;

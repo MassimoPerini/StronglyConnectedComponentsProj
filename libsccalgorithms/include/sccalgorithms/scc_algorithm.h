@@ -8,21 +8,25 @@
 namespace sccalgorithms {
     class scc_algorithm {
     public:
-        scc_algorithm(const char *name, const std::function<unsigned(const sccalgorithms::DirectedGraph &)> &func)
+        scc_algorithm(const char *name, const std::function<unsigned(const sccalgorithms::DirectedGraph &)> func)
                 : _name(name), _func(func) {}
 
-        const std::string & getName() const {
+        const std::string getName() const {
             return _name;
         }
 
-        unsigned operator()(const sccalgorithms::DirectedGraph & g) {
+        unsigned int operator()(const sccalgorithms::DirectedGraph & g) {
             return _func(g);
         }
 
     private:
-        const std::string &_name;
-        const std::function<unsigned(const sccalgorithms::DirectedGraph &)> &_func;
+        std::string _name;
+        std::function<unsigned(const sccalgorithms::DirectedGraph &)> _func;
     };
+
+    inline std::ostream& operator<<(std::ostream & out, const scc_algorithm & alg) {
+        return out << alg.getName();
+    }
 }
 
 #endif //SCC_SCC_ALGORITHM_H

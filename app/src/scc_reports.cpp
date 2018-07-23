@@ -1,22 +1,24 @@
 #include "scc_reports.h"
 #include <iostream>
+#include <numeric>
 #include <chrono>
 #include <boost/graph/erdos_renyi_generator.hpp>
 #include <boost/random/linear_congruential.hpp>
 #include <boost/graph/strong_components.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
+
 typedef boost::erdos_renyi_iterator<boost::minstd_rand, sccalgorithms::DirectedGraph> ERGen;
 
 std::vector<scc_record>
-        scc_reports::run(const std::vector<std::function<unsigned(const sccalgorithms::DirectedGraph &)>> & algorithms) {
+        scc_reports::run(std::vector<sccalgorithms::scc_algorithm> & algorithms) {
 
     // save records here
     std::vector<scc_record> results;
 
     boost::minstd_rand gen;
 
-    for (unsigned i=minV; i<=maxV; i+=offsetV) { // for each number of verteces
+    for (unsigned i=std::max(2u, minV); i<=maxV; i+=1) { // for each number of verteces
         for (float j=minDensity; j<=maxDensity; j+=offsetDensity) { // for each density value
             sccalgorithms::DirectedGraph randomGraph(ERGen(gen, i, j), ERGen(), i); // creates a random graph
 
