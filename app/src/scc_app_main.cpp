@@ -87,8 +87,8 @@ int main(int argc, char* argv[]) {
         if (algorithmParams != end(_vargv)) {
 
             for (auto idxAlg = algorithmParams + 1; idxAlg != end(_vargv) && idxAlg != genGraphParams; ++idxAlg) {
-                auto algorithmIdx = find_if(cbegin(sccAlgorithms), cend(sccAlgorithms), [idxAlg](const auto &alg) {return alg.getName()==*idxAlg;});
-                if (algorithmIdx != cend(sccAlgorithms))
+                auto algorithmIdx = find_if(begin(sccAlgorithms), end(sccAlgorithms), [idxAlg](const auto &alg) {return alg.getName()==*idxAlg;});
+                if (algorithmIdx != end(sccAlgorithms))
                     chosenAlgorithms.push_back(*algorithmIdx);
             }
         }
