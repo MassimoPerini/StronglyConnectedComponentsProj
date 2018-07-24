@@ -16,7 +16,7 @@ const std::vector<sccalgorithms::scc_algorithm> sccalgorithms::availableAlgorith
             sccalgorithms::scc_algorithm("nuutila1_iterative", SCC_PICK(nuutila1_iterative_ssc)),
             sccalgorithms::scc_algorithm("nuutila2_iterative", SCC_PICK(nuutila2_iterative_ssc)),
             sccalgorithms::scc_algorithm("pearce1",  SCC_PICK(pearce1_scc)),
-            sccalgorithms::scc_algorithm("pearce2",  SCC_PICK(pearce2_scc))
+            sccalgorithms::scc_algorithm("pearce2",  SCC_PICK(pearce2_scc)),
             sccalgorithms::scc_algorithm("pearce2_iterative",  SCC_PICK(pearce2_iterative_ssc))
     };
 };  

@@ -21,6 +21,10 @@ namespace sccalgorithms {
         return sccalgorithms::tarjan_scc(g, boost::get(boost::vertex_index, g));
     }
 
+    //template<class WritableMap>
+
+
+
     unsigned int nuutila1_scc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
     inline unsigned int nuutila1_scc(const sccalgorithms::DirectedGraph &graph){
         return sccalgorithms::nuutila1_scc(graph, boost::get(boost::vertex_index, graph));

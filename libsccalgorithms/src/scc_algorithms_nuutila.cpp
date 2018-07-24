@@ -71,7 +71,7 @@ unsigned int nuutila1_visit(const sccalgorithms::Vertex &node,
     return num_sccs;
 }
 
-
+//template<class WritableMap>
 unsigned int sccalgorithms::nuutila1_scc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map)
 {
 

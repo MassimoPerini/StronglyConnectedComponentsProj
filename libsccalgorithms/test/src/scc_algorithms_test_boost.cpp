@@ -48,7 +48,9 @@ TEST_F(ExampleGraphs, MyStrongComponents) {
 
 
 TEST_F(ExampleGraphs, Nutilia1) {
-    ASSERT_EQ(3, sccalgorithms::nuutila1_scc(tarjanGraph));
+    //std::vector<unsigned int> lowpt(num_vertices(tarjanGraph));
+
+    ASSERT_EQ(3, sccalgorithms::nuutila1_scc(tarjanGraph/*, boost::make_iterator_property_map(lowpt.begin(), boost::get(boost::vertex_index, tarjanGraph))*/));
 }
 
 TEST_F(ExampleGraphs, Nutilia2) {
@@ -60,7 +62,6 @@ TEST_F(ExampleGraphs, Pearce1) {
 }
 
 TEST_F(ExampleGraphs, Pearce2) {
-<<<<<<< HEAD
     ASSERT_EQ(3, sccalgorithms::pearce2_scc(tarjanGraph));
 }
 
