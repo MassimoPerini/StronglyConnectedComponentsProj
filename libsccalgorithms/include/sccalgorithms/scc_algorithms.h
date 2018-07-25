@@ -16,14 +16,15 @@ typedef typename boost::property_map<sccalgorithms::DirectedGraph, boost::vertex
 
 namespace sccalgorithms {
 
+    //template<class WritableMap>
+    //unsigned int nuutila1_scc_test(const sccalgorithms::DirectedGraph &graph, WritableMap map);
+
     unsigned int tarjan_scc(const sccalgorithms::DirectedGraph &, IndexMap);
     inline unsigned int tarjan_scc(const sccalgorithms::DirectedGraph & g)  {
         return sccalgorithms::tarjan_scc(g, boost::get(boost::vertex_index, g));
     }
 
     //template<class WritableMap>
-
-
 
     unsigned int nuutila1_scc(const sccalgorithms::DirectedGraph &graph, IndexMap vertex_index_map);
     inline unsigned int nuutila1_scc(const sccalgorithms::DirectedGraph &graph){

@@ -5,6 +5,13 @@
 #include "sccalgorithms/scc_algorithms.h"
 #include <iostream>
 
+#include <boost/property_map/property_map.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/iteration_macros.hpp>
+
+
+#include "sccalgorithms/scc_map_algorithms.hpp"
+
 /**
  * Test fixture containing example graphs
  */
@@ -51,6 +58,17 @@ TEST_F(ExampleGraphs, Nutilia1) {
     //std::vector<unsigned int> lowpt(num_vertices(tarjanGraph));
 
     ASSERT_EQ(3, sccalgorithms::nuutila1_scc(tarjanGraph/*, boost::make_iterator_property_map(lowpt.begin(), boost::get(boost::vertex_index, tarjanGraph))*/));
+}
+
+TEST_F(ExampleGraphs, Nutilia1Test) {
+    std::vector<unsigned int> lowpt(num_vertices(tarjanGraph));
+    int r = sccalgorithms::nuutila1_scc_test(tarjanGraph, boost::make_iterator_property_map(lowpt.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+    for (int i=0;i<lowpt.size();i++)
+    {
+        cout<<lowpt[i]<<" ";
+    }
+    cout<<endl;
+    ASSERT_EQ(3, r);
 }
 
 TEST_F(ExampleGraphs, Nutilia2) {
