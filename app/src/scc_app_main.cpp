@@ -14,7 +14,6 @@
 #include <stdexcept>
 #include <iterator>
 
-
 #include <iostream>
 #include <fstream>
 
@@ -33,9 +32,12 @@ using namespace sccalgorithms;
 
 typedef std::tuple<unsigned, unsigned, unsigned, float, float, float> gen_graph_params;
 
-gen_graph_params readGenGraphParams(std::vector<std::string> & vec, std::vector<std::string>::iterator idx) {
-    auto size = std::count_if(idx, std::end(vec), [](const auto & s){return true;});
+template <class Iter>
+gen_graph_params
+readGenGraphParams(Iter idx, Iter last) {
+    typename iterator_traits<Iter>::difference_type size = distance(idx, last);
     if (size < 6) throw std::out_of_range ("Error: at least 6 params needed, given " + boost::lexical_cast<std::string>(6));
+
     return std::make_tuple(
             boost::lexical_cast<unsigned>(*idx),
             boost::lexical_cast<unsigned>(*(idx+1)),
@@ -96,9 +98,9 @@ int main(int argc, char* argv[]) {
         if (chosenAlgorithms.size() == 0)
             chosenAlgorithms = sccAlgorithms;
 
-        HELP_IF_FAIL(genGraphTuple = readGenGraphParams(_vargv, genGraphParams+1))
+        HELP_IF_FAIL( genGraphTuple = readGenGraphParams(genGraphParams+1, end(_vargv)) )
     } else {
-        HELP_IF_FAIL(genGraphTuple = readGenGraphParams(_vargv, begin(_vargv)))
+        HELP_IF_FAIL( genGraphTuple = readGenGraphParams(begin(_vargv), end(_vargv)) )
         chosenAlgorithms = sccAlgorithms;
     }
 
