@@ -18,6 +18,11 @@ const std::vector<sccalgorithms::scc_algorithm> sccalgorithms::availableAlgorith
             }),
             sccalgorithms::scc_algorithm("tarjan",   SCC_PICK(tarjan_scc)),
             sccalgorithms::scc_algorithm("nuutila1", SCC_PICK(nuutila1_scc)),
+            sccalgorithms::scc_algorithm("nuutila1_map", [](const sccalgorithms::DirectedGraph & g) {
+                std::vector<int> component(num_vertices(g));
+                return sccalgorithms::tarjan_map_scc(g,
+                                                     boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, g)));
+            }),
             sccalgorithms::scc_algorithm("nuutila2", SCC_PICK(nuutila2_scc)),
             sccalgorithms::scc_algorithm("nuutila1_iterative", SCC_PICK(nuutila1_iterative_ssc)),
             sccalgorithms::scc_algorithm("nuutila2_iterative", SCC_PICK(nuutila2_iterative_ssc)),

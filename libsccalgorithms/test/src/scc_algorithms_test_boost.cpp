@@ -9,7 +9,6 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/iteration_macros.hpp>
 
-
 #include "sccalgorithms/scc_map_algorithms.hpp"
 #include "sccalgorithms/scc_map_tarjan.hpp"
 
@@ -62,14 +61,17 @@ TEST_F(ExampleGraphs, Nutilia1) {
 }
 
 TEST_F(ExampleGraphs, Nutilia1Test) {
-    std::vector<unsigned int> lowpt(num_vertices(tarjanGraph));
-    int r = sccalgorithms::nuutila1_scc_test(tarjanGraph, boost::make_iterator_property_map(lowpt.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-    for (int i=0;i<lowpt.size();i++)
-    {
-        cout<<lowpt[i]<<" ";
-    }
-    cout<<endl;
-    ASSERT_EQ(3, r);
+    std::vector<int> component(boost::num_vertices(tarjanGraph));
+    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
+
+    int num_components = sccalgorithms::nuutila1_scc_test(tarjanGraph,
+                                                          boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+    int num_components_boost = boost::strong_components(tarjanGraph,
+                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+
+    ASSERT_EQ(num_components_boost, num_components);
+    for (int i=0; i<component.size(); ++i)
+        ASSERT_EQ(component_boost[i], component[i]);
 }
 
 TEST_F(ExampleGraphs, Nutilia2) {

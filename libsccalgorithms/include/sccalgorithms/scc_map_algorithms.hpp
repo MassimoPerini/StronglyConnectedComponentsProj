@@ -6,110 +6,108 @@
 #include <boost/graph/iteration_macros.hpp>
 #include <boost/property_map/property_map.hpp>
 
-
 #include <iostream>
 #include <stack>
 
 #ifndef SCC_SCC_MAP_ALGORITHMS_H
 #define SCC_SCC_MAP_ALGORITHMS_H
 
-using namespace std;
-using namespace boost;
-
 namespace sccalgorithms {
 
-    template<class WritableMap>
-    inline unsigned int nuutila1_visit(const sccalgorithms::Vertex &node,
-                                       int &depth,
-                                       const IndexMap &vertex_index_map,
-                                       const sccalgorithms::DirectedGraph &graph,
-                                       vector<unsigned int> &visitation_index,
-                                       vector<int> &root,
-                                       vector<bool> &index_components,
-                                       stack<int> &stack,
-                                       unsigned int &total_scc,
-                                       WritableMap map) {
-        unsigned int num_sccs = 0;
-        int index = boost::get(vertex_index_map, node);
-        root[index] = index;
-        index_components[index] = false;
-        visitation_index[index] = depth;
+    namespace nuutila_details {
 
-        for (auto vd : boost::make_iterator_range(adjacent_vertices(node, graph)))  //cosa cambia tra inv e non inv?
-        {
-            int index_2 = boost::get(vertex_index_map, vd);
-            if (visitation_index[index_2] < 1)//not visited -> explore
+        template<class Graph, class ComponentMap>
+        inline void nuutila1_visit(const typename boost::graph_traits<Graph>::vertex_descriptor &node,
+                                   int &depth,
+                                   const typename boost::property_map<Graph, boost::vertex_index_t>::const_type &vertex_index_map,
+                                   const Graph &graph,
+                                   std::vector<unsigned int> &visitation_index,
+                                   std::vector<int> &root,
+                                   std::vector<bool> &index_components,
+                                   std::stack<int> &stack,
+                                   typename boost::property_traits<ComponentMap>::value_type &total_scc,
+                                   ComponentMap components) {
+            int index = boost::get(vertex_index_map, node);
+            root[index] = index;
+            index_components[index] = false; // should be already false!?
+            visitation_index[index] = depth;
+
+            for (auto vd : boost::make_iterator_range(
+                    boost::adjacent_vertices(node, graph)))  //cosa cambia tra inv e non inv?
             {
-                depth++;
-                num_sccs += sccalgorithms::nuutila1_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components,
-                                           stack, total_scc, map);
-            }
+                int index_2 = boost::get(vertex_index_map, vd);
+                if (visitation_index[index_2] < 1)//not visited -> explore
+                {
+                    depth++;
+                    nuutila1_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components,
+                                   stack, total_scc, components);
+                }
 
-            if (!index_components[index_2]) {
-                if (visitation_index[root[index_2]] < visitation_index[root[index]])
-                    root[index] = root[index_2];
-            }
-        }
-
-        if (root[index] == index) {
-            num_sccs++;
-            //cout<<"NEW COMPONENT FOUND: "<<index;
-            index_components[index] = true;
-
-            total_scc++;
-            boost::put(map, index, total_scc);
-
-            if (!stack.empty()) {
-                int old_index = stack.top();
-                while (visitation_index[old_index] > visitation_index[index]) {
-                    //cout << " , " << old_index;
-                    index_components[old_index] = true;
-                    stack.pop();
-
-                    boost::put(map, old_index, total_scc);
-
-                    if (stack.empty()) {
-                        break;
-                    }
-                    old_index = stack.top();
+                if (!index_components[index_2]) {
+                    if (visitation_index[root[index_2]] < visitation_index[root[index]])
+                        root[index] = root[index_2];
                 }
             }
-            //cout<<endl;
-        } else {
-            stack.push(index);  //oppure pushare il nodo direttamente e poi prendere al pop il suo index
+
+            if (root[index] == index) {
+                //cout<<"NEW COMPONENT FOUND: "<<index;
+                index_components[index] = true;
+
+                boost::put(components, node, total_scc);
+
+                if (!stack.empty()) {
+                    int old_index = stack.top();
+                    while (visitation_index[old_index] > visitation_index[index]) {
+                        //cout << " , " << old_index;
+                        index_components[old_index] = true;
+                        stack.pop();
+
+                        boost::put(components, old_index, total_scc);
+
+                        if (stack.empty()) {
+                            break;
+                        }
+                        old_index = stack.top();
+                    }
+                }
+
+                total_scc++;
+                //cout<<endl;
+            } else {
+                stack.push(index);  //oppure pushare il nodo direttamente e poi prendere al pop il suo index
+            }
         }
-        return num_sccs;
-    }
 
-    template<class WritableMap>
-    inline unsigned int nuutila1_scc_test(const sccalgorithms::DirectedGraph &graph, WritableMap map) {
+    }; // namespace nuutila_details
 
-        unsigned int num_sccs = 0;
-        unsigned long l = num_vertices(graph);
-        std::vector<int> roots(l);
-        std::vector<unsigned int> visitation_indexes(l);
-        std::vector<bool> index_components(l);
+    template<class Graph, class ComponentMap>
+    inline typename boost::property_traits<ComponentMap>::value_type
+    nuutila1_scc_test(const Graph &graph, ComponentMap components) {
+        using namespace nuutila_details;
+
+        typedef typename boost::graph_traits<Graph>::vertex_descriptor Vertex;
+        BOOST_CONCEPT_ASSERT(( boost::ReadWritePropertyMapConcept<ComponentMap, Vertex> ));
+        typedef typename boost::graph_traits<Graph>::vertices_size_type size_type;
+
+        size_type l = num_vertices(graph);
+        std::vector<int> roots(l, 0);
+        std::vector<unsigned int> visitation_indexes(l, 0);
+        std::vector<bool> index_components(l, false);
         std::stack<int> stack;
         int depth = 1;
-        IndexMap vertex_index_map = boost::get(boost::vertex_index, graph);
-        unsigned int total_scc = 0;
+        typename boost::property_map<Graph, boost::vertex_index_t>::const_type vertex_index_map =
+                boost::get(boost::vertex_index, graph);
+        typename boost::property_traits<ComponentMap>::value_type total_scc = 0;
 
-        for (int i = 0; i < l; i++) {
-            roots[i] = 0;
-            index_components[i] = false;
-            visitation_indexes[i] = 0;
+        BGL_FORALL_VERTICES_T(v, graph, Graph) {
+            //std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
+            int int_value = boost::get(vertex_index_map, v);
+            if (visitation_indexes[int_value] == 0) {
+                nuutila1_visit(v, depth, vertex_index_map, graph, visitation_indexes, roots, index_components, stack, total_scc, components);
+            }
         }
 
-        BGL_FORALL_VERTICES(v, graph, DirectedGraph) {
-                //std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
-                int int_value = boost::get(vertex_index_map, v);
-                if (visitation_indexes[int_value] == 0) {
-                    num_sccs += sccalgorithms::nuutila1_visit(v, depth, vertex_index_map, graph, visitation_indexes, roots, index_components, stack, total_scc, map);
-                }
-            }
-
-        return num_sccs;
-
+        return total_scc;
     }
 
 }
