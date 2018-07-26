@@ -11,6 +11,7 @@
 
 
 #include "sccalgorithms/scc_map_algorithms.hpp"
+#include "sccalgorithms/scc_map_tarjan.hpp"
 
 /**
  * Test fixture containing example graphs
@@ -93,4 +94,18 @@ TEST_F(ExampleGraphs, Nuutila2Iterative){
 
 TEST_F(ExampleGraphs, Pearce2Iterative){
     ASSERT_EQ(3, sccalgorithms::pearce2_iterative_ssc(tarjanGraph));
+}
+
+TEST_F(ExampleGraphs, TarjanMap){
+    std::vector<int> component(boost::num_vertices(tarjanGraph));
+    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
+
+    int num_components = sccalgorithms::tarjan_map_scc(tarjanGraph,
+                                                  boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+    int num_components_boost = boost::strong_components(tarjanGraph,
+                                                  boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+
+    ASSERT_EQ(num_components_boost, num_components);
+    for (int i=0; i<component.size(); ++i)
+        ASSERT_EQ(component_boost[i], component[i]);
 }
