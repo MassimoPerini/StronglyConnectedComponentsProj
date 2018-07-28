@@ -5,8 +5,10 @@
 #include <sccalgorithms/scc_algorithms.h>
 #include <scc_reports.h>
 #include <boost/lexical_cast.hpp>
-#include <console_formatter.h>
-#include <csv_formatter.h>
+#include <boost/property_map/property_map.hpp>
+#include "scc_reports.h"
+#include "console_formatter.h"
+#include "csv_formatter.h"
 #include <vector>
 #include <fstream>
 #include <algorithm>
@@ -77,9 +79,9 @@ int main(int argc, char* argv[]) {
         return EXIT_SUCCESS;
     }
 
-    auto sccAlgorithms = availableAlgorithms(); // TODO availableAlgorithms as constant given ?
+    auto sccAlgorithms = availableAlgorithms<DirectedGraph>(); // TODO availableAlgorithms as constant given ?
 
-    vector<scc_algorithm> chosenAlgorithms;
+    vector<scc_algorithm<DirectedGraph> > chosenAlgorithms;
     gen_graph_params genGraphTuple;
     vector<string> _vargv(argv+1, argv+argc);
 
@@ -115,7 +117,7 @@ int main(int argc, char* argv[]) {
     vector<string> algorithms_names(chosenAlgorithms.size());
     transform(chosenAlgorithms.begin(), chosenAlgorithms.end(), algorithms_names.begin(), [](const auto & algo){return algo.getName();});
 
-    scc_reports report(minV, maxV, offsetV, minDensity, maxDensity, offsetDensity);
+    scc_reports<DirectedGraph> report(minV, maxV, offsetV, minDensity, maxDensity, offsetDensity);
     const auto records = report.run(chosenAlgorithms);
 
     console_formatter consoleReport(records, algorithms_names);
@@ -147,7 +149,7 @@ void out_usage(ostream & sout, const string & program_name, const map<string, st
     sout << "\t - <ALGORITHM-NAME> : The name of a scc algorithm we implemented.\n"
          << "\t     If the list provided by param --algorithm is empty, all those available will be used.\n"
          << "\t     Choose among: ";
-    for (const auto & alg : availableAlgorithms())
+    for (const auto & alg : availableAlgorithms<DirectedGraph>())
         sout << alg << " ";
     sout << "\n";
 
