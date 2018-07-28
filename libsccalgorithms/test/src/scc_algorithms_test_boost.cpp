@@ -13,6 +13,8 @@
 #include "sccalgorithms/scc_map_tarjan.hpp"
 #include "sccalgorithms/scc_map_pearce.hpp"
 #include "sccalgorithms/scc_map_pearce_iterative.hpp"
+#include "sccalgorithms/scc_map_nuutila_iterative.hpp"
+
 
 /**
  * Test fixture containing example graphs
@@ -145,6 +147,24 @@ TEST_F(ExampleGraphs, Pearce2MapIterative){
 
     int num_components = sccalgorithms::pearce2_map_iterative_scc(tarjanGraph,
                                                         boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+    int num_components_boost = boost::strong_components(tarjanGraph,
+                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+
+    ASSERT_EQ(num_components_boost, num_components);
+    for (int i=0; i<component.size(); ++i) {
+        //std::cout<<component[i]<<" "<<std::endl;
+        ASSERT_EQ(component_boost[i], component[i]);
+    }
+    //std::cout<<std::endl;
+
+}
+
+TEST_F(ExampleGraphs, Nuutila1MapIterative){
+    std::vector<int> component(boost::num_vertices(tarjanGraph));
+    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
+
+    int num_components = sccalgorithms::nuutila1_map_iterative_scc(tarjanGraph,
+                                                                  boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
     int num_components_boost = boost::strong_components(tarjanGraph,
                                                         boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
