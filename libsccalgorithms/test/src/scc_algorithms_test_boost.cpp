@@ -176,3 +176,26 @@ TEST_F(ExampleGraphs, Nuutila1MapIterative){
     //std::cout<<std::endl;
 
 }
+
+TEST_F(ExampleGraphs, Nuutila2MapIterative){
+    std::vector<int> component(boost::num_vertices(tarjanGraph));
+    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
+
+    int num_components = sccalgorithms::nuutila2_map_iterative_scc(tarjanGraph,
+                                                        boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+    int num_components_boost = boost::strong_components(tarjanGraph,
+                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+
+    int count_child = 0;
+    ASSERT_EQ(num_components_boost, num_components);
+    for (int i=0; i<component.size(); ++i) {
+        if (component[i] != 0)
+        {
+            ASSERT_EQ(component_boost[i]+1, component[i]);
+        }
+        else {
+            count_child++;
+        }
+    }
+    ASSERT_GE(count_child, num_components_boost);
+}
