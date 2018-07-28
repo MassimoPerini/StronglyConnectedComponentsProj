@@ -9,7 +9,7 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/iteration_macros.hpp>
 
-#include "sccalgorithms/scc_map_algorithms.hpp"
+#include "sccalgorithms/scc_map_nuutila.hpp"
 #include "sccalgorithms/scc_map_tarjan.hpp"
 #include "sccalgorithms/scc_map_pearce.hpp"
 #include "sccalgorithms/scc_map_pearce_iterative.hpp"
@@ -20,6 +20,12 @@
  * Test fixture containing example graphs
  */
 class ExampleGraphs : public ::testing::Test {
+public:
+    inline bool checkRightComponents(const std::vector<int> & testVector) {
+        return testVector == right_components;
+    }
+private:
+    const std::vector<int> right_components{2, 2, 1, 1, 1, 0, 1, 2};
 protected:
     void SetUp() override {
         boost::add_edge(0, 1, tarjanGraph);
@@ -45,6 +51,7 @@ TEST_F(ExampleGraphs, BoostStrongComponents) {
             boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
     ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(checkRightComponents(component));
 }
 
 TEST_F(ExampleGraphs, MyStrongComponents) {
@@ -58,18 +65,24 @@ TEST_F(ExampleGraphs, Nutilia1) {
     ASSERT_EQ(3, sccalgorithms::nuutila1_scc(tarjanGraph/*, boost::make_iterator_property_map(lowpt.begin(), boost::get(boost::vertex_index, tarjanGraph))*/));
 }
 
-TEST_F(ExampleGraphs, Nutilia1Test) {
+TEST_F(ExampleGraphs, Nutilia1Map) {
     std::vector<int> component(boost::num_vertices(tarjanGraph));
-    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
 
-    int num_components = sccalgorithms::nuutila1_scc_test(tarjanGraph,
+    int num_components = sccalgorithms::nuutila1_map_scc(tarjanGraph,
                                                           boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-    int num_components_boost = boost::strong_components(tarjanGraph,
-                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
-    ASSERT_EQ(num_components_boost, num_components);
-    for (int i=0; i<component.size(); ++i)
-        ASSERT_EQ(component_boost[i], component[i]);
+    ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(checkRightComponents(component));
+}
+
+TEST_F(ExampleGraphs, Nutilia2Map) {
+    std::vector<int> component(boost::num_vertices(tarjanGraph), -1);
+    std::vector<int> expected{2, -1, 1, -1, -1, 0, -1, -1};
+    int num_components = sccalgorithms::nuutila2_map_scc(tarjanGraph,
+                                                          boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
+
+    ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(component == expected);
 }
 
 TEST_F(ExampleGraphs, Nutilia2) {
@@ -98,83 +111,51 @@ TEST_F(ExampleGraphs, Pearce2Iterative){
 
 TEST_F(ExampleGraphs, TarjanMap){
     std::vector<int> component(boost::num_vertices(tarjanGraph));
-    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
 
     int num_components = sccalgorithms::tarjan_map_scc(tarjanGraph,
                                                   boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-    int num_components_boost = boost::strong_components(tarjanGraph,
-                                                  boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
-    ASSERT_EQ(num_components_boost, num_components);
-    for (int i=0; i<component.size(); ++i)
-        ASSERT_EQ(component_boost[i], component[i]);
+    ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(checkRightComponents(component));
 }
 
 TEST_F(ExampleGraphs, Pearce1Map){
     std::vector<int> component(boost::num_vertices(tarjanGraph));
-    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
 
     int num_components = sccalgorithms::pearce1_map_scc(tarjanGraph,
                                                        boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-    int num_components_boost = boost::strong_components(tarjanGraph,
-                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
-    ASSERT_EQ(num_components_boost, num_components);
-    for (int i=0; i<component.size(); ++i)
-        ASSERT_EQ(component_boost[i], component[i]);
+    ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(checkRightComponents(component));
 }
 
 TEST_F(ExampleGraphs, Pearce2Map){
     std::vector<int> component(boost::num_vertices(tarjanGraph));
-    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
 
     int num_components = sccalgorithms::pearce2_map_scc(tarjanGraph,
                                                        boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-    int num_components_boost = boost::strong_components(tarjanGraph,
-                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
-    ASSERT_EQ(num_components_boost, num_components);
-    for (int i=0; i<component.size(); ++i) {
-        //std::cout<<component_boost[i]<<" ";
-        ASSERT_EQ(component_boost[i], component[i]);
-    }
-    //std::cout<<std::endl;
+    ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(checkRightComponents(component));
 }
 
 TEST_F(ExampleGraphs, Pearce2MapIterative){
     std::vector<int> component(boost::num_vertices(tarjanGraph));
-    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
-
     int num_components = sccalgorithms::pearce2_map_iterative_scc(tarjanGraph,
                                                         boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-    int num_components_boost = boost::strong_components(tarjanGraph,
-                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
 
-    ASSERT_EQ(num_components_boost, num_components);
-    for (int i=0; i<component.size(); ++i) {
-        //std::cout<<component[i]<<" "<<std::endl;
-        ASSERT_EQ(component_boost[i], component[i]);
-    }
-    //std::cout<<std::endl;
+    ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(checkRightComponents(component));
 
 }
 
 TEST_F(ExampleGraphs, Nuutila1MapIterative){
     std::vector<int> component(boost::num_vertices(tarjanGraph));
-    std::vector<int> component_boost(boost::num_vertices(tarjanGraph));
 
     int num_components = sccalgorithms::nuutila1_map_iterative_scc(tarjanGraph,
                                                                   boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-    int num_components_boost = boost::strong_components(tarjanGraph,
-                                                        boost::make_iterator_property_map(component_boost.begin(), boost::get(boost::vertex_index, tarjanGraph)));
-
-    ASSERT_EQ(num_components_boost, num_components);
-    for (int i=0; i<component.size(); ++i) {
-        //std::cout<<component[i]<<" "<<std::endl;
-        ASSERT_EQ(component_boost[i], component[i]);
-    }
-    //std::cout<<std::endl;
-
+    ASSERT_EQ(3, num_components);
+    ASSERT_TRUE(checkRightComponents(component));
 }
 
 TEST_F(ExampleGraphs, Nuutila2MapIterative){

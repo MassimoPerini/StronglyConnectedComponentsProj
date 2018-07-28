@@ -1,6 +1,6 @@
 #include "sccalgorithms/scc_algorithms.h"
 #include "sccalgorithms/scc_map_tarjan.hpp"
-#include "sccalgorithms/scc_map_algorithms.hpp"
+#include "sccalgorithms/scc_map_nuutila.hpp"
 #include "sccalgorithms/scc_map_pearce.hpp"
 #include <boost/graph/strong_components.hpp>
 
@@ -22,11 +22,16 @@ const std::vector<sccalgorithms::scc_algorithm> sccalgorithms::availableAlgorith
             sccalgorithms::scc_algorithm("nuutila1", SCC_PICK(nuutila1_scc)),
             sccalgorithms::scc_algorithm("nuutila1_map", [](const sccalgorithms::DirectedGraph & g) {
                 std::vector<int> component(num_vertices(g));
-                return sccalgorithms::nuutila1_scc_test(g,
+                return sccalgorithms::nuutila1_map_scc(g,
                         boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, g)));
             }),
-            sccalgorithms::scc_algorithm("nuutila2", SCC_PICK(nuutila2_scc)),
             sccalgorithms::scc_algorithm("nuutila1_iterative", SCC_PICK(nuutila1_iterative_ssc)),
+            sccalgorithms::scc_algorithm("nuutila2", SCC_PICK(nuutila2_scc)),
+            sccalgorithms::scc_algorithm("nuutila1_map", [](const sccalgorithms::DirectedGraph & g) {
+                std::vector<int> component(num_vertices(g));
+                return sccalgorithms::nuutila1_map_scc(g,
+                                                       boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, g)));
+            }),
             sccalgorithms::scc_algorithm("nuutila2_iterative", SCC_PICK(nuutila2_iterative_ssc)),
             sccalgorithms::scc_algorithm("pearce1",  SCC_PICK(pearce1_scc)),
             sccalgorithms::scc_algorithm("pearce1_map", [](const sccalgorithms::DirectedGraph & g) {
