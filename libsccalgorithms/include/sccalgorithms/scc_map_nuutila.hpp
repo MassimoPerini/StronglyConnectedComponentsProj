@@ -23,6 +23,7 @@ namespace sccalgorithms {
                                    const Graph &graph,
                                    std::vector<unsigned int> &visitation_index,
                                    std::vector<int> &root,
+                                   std::vector<bool> &visited,
                                    std::vector<bool> &index_components,
                                    std::stack<int> &stack,
                                    typename boost::property_traits<ComponentMap>::value_type &total_scc,
@@ -31,15 +32,16 @@ namespace sccalgorithms {
             root[index] = index;
             index_components[index] = false; // should be already false!?
             visitation_index[index] = depth;
+            visited[index] = true;
 
             for (auto vd : boost::make_iterator_range(
                     boost::adjacent_vertices(node, graph)))  //cosa cambia tra inv e non inv?
             {
                 int index_2 = boost::get(vertex_index_map, vd);
-                if (visitation_index[index_2] < 1)//not visited -> explore
+                if (!visited[index_2])//not visited -> explore
                 {
                     depth++;
-                    nuutila1_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components,
+                    nuutila1_visit(vd, depth, vertex_index_map, graph, visitation_index, root, visited, index_components,
                                    stack, total_scc, components);
                 }
 
@@ -93,8 +95,9 @@ namespace sccalgorithms {
         std::vector<int> roots(l, 0);
         std::vector<unsigned int> visitation_indexes(l, 0);
         std::vector<bool> index_components(l, false);
+        std::vector<bool> visited(l, false);
         std::stack<int> stack;
-        int depth = 1;
+        int depth = 0;
         typename boost::property_map<Graph, boost::vertex_index_t>::const_type vertex_index_map =
                 boost::get(boost::vertex_index, graph);
         typename boost::property_traits<ComponentMap>::value_type total_scc = 0;
@@ -102,8 +105,8 @@ namespace sccalgorithms {
         BGL_FORALL_VERTICES_T(v, graph, Graph) {
             //std::cout<<"TRUE VALUE: "<<boost::get(vertex_index_map,v) <<"\n";
             int int_value = boost::get(vertex_index_map, v);
-            if (visitation_indexes[int_value] == 0) {
-                nuutila1_visit(v, depth, vertex_index_map, graph, visitation_indexes, roots, index_components, stack, total_scc, components);
+            if (!visited[int_value]) {
+                nuutila1_visit(v, depth, vertex_index_map, graph, visitation_indexes, roots, visited, index_components, stack, total_scc, components);
             }
         }
 
@@ -121,6 +124,7 @@ namespace sccalgorithms {
                                    const Graph &graph,
                                    std::vector<unsigned int> &visitation_index,
                                    std::vector<int> &root,
+                                   std::vector<bool> &visited,
                                    std::vector<bool> &index_components,
                                    std::stack<int> &stack,
                                    std::vector<bool> &is_on_stack,
@@ -130,15 +134,16 @@ namespace sccalgorithms {
             root[index] = index;
             index_components[index] = false; // should be already false!?
             visitation_index[index] = depth;
+            visited[index] = true;
 
             for (auto vd : boost::make_iterator_range(
                     boost::adjacent_vertices(node, graph)))  //cosa cambia tra inv e non inv?
             {
                 int index_2 = boost::get(vertex_index_map, vd);
-                if (visitation_index[index_2] < 1)//not visited -> explore
+                if (!visited[index_2])//not visited -> explore
                 {
                     depth++;
-                    nuutila2_visit(vd, depth, vertex_index_map, graph, visitation_index, root, index_components,
+                    nuutila2_visit(vd, depth, vertex_index_map, graph, visitation_index, root, visited, index_components,
                                    stack, is_on_stack, total_scc, components);
                 }
 
@@ -186,15 +191,16 @@ namespace sccalgorithms {
         std::vector<bool> index_components(l, false);
         std::stack<int> stack;
         std::vector<bool> is_on_stack(l, false);
-        int depth = 1;
+        std::vector<bool> visited(l, false);
+        int depth = 0;
         typename boost::property_map<Graph, boost::vertex_index_t>::const_type vertex_index_map =
                 boost::get(boost::vertex_index, graph);
         typename boost::property_traits<ComponentMap>::value_type total_scc = 0;
 
         BGL_FORALL_VERTICES_T(v, graph, Graph) {
             int int_value = boost::get(vertex_index_map, v);
-            if (visitation_indexes[int_value] == 0) {
-                nuutila2_visit(v, depth, vertex_index_map, graph, visitation_indexes, roots, index_components, stack, is_on_stack, total_scc, components);
+            if (!visited[int_value]) {
+                nuutila2_visit(v, depth, vertex_index_map, graph, visitation_indexes, roots, visited, index_components, stack, is_on_stack, total_scc, components);
             }
         }
 

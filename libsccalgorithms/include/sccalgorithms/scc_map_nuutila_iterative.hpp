@@ -15,6 +15,7 @@ namespace sccalgorithms {
                                    const Graph &graph,
                                    std::vector<unsigned int> &visitation_index,
                                    std::vector<int> &root,
+                                  std::vector<bool> &visited,
                                    std::vector<bool> &index_components,
                                    std::stack<int> &stack1,
                                    std::stack<typename boost::graph_traits<Graph>::vertex_descriptor> &vS,
@@ -32,7 +33,7 @@ namespace sccalgorithms {
                 typename boost::graph_traits<Graph>::vertex_descriptor new_node= (*(iS.top().first));
                 int index = boost::get(vertex_index_map, new_node);
 
-                if (visitation_index[index] >= 1) {
+                if (visited[index]) {
 
                     if (!index_components[index]) {
                         if (visitation_index[root[index]] < visitation_index[root[vertex_index]])
@@ -55,11 +56,12 @@ namespace sccalgorithms {
                     typename boost::graph_traits<Graph>::vertex_descriptor new_node = (*(iS.top().first));
                     int index = boost::get(vertex_index_map, new_node);
 
-                    if (visitation_index[index] < 1) { //not explored
+                    if (!visited[index]) { //not explored
                         root[index] = index;
-                        index_components[index] = false;
+                        //index_components[index] = false;
                         visitation_index[index] = traversal_counter;
                         traversal_counter++;
+                        visited[index] = true;
 
                         vS.push(new_node);
                         iS.push(adjacent_vertices(new_node, graph));
@@ -123,22 +125,23 @@ namespace sccalgorithms {
 
         size_type l = num_vertices(graph);
 
-        std::vector<int>  roots(l);
+        std::vector<int>  roots(l, 0);
         std::stack <int> stack1;
-        std::vector<unsigned int> visitation_index(l);
-        std::vector<bool> index_components(l);
+        std::vector<unsigned int> visitation_index(l, 0);
+        std::vector<bool> index_components(l, false);
+        std::vector<bool> visited(l, false);
 
-        unsigned int traversal_counter = 1;
+        unsigned int traversal_counter = 0;
 
         std::stack <typename boost::graph_traits<Graph>::vertex_descriptor> vS;
         std::stack <std::pair <typename boost::graph_traits<Graph>::adjacency_iterator, typename boost::graph_traits<Graph>::adjacency_iterator > > iS;
 
-        for (int i = 0;i<l;i++)
+/*        for (int i = 0;i<l;i++)
         {
             roots[i] = 0;
             index_components[i] = false;
             visitation_index[i] = 0;
-        }
+        }*/
 
         BGL_FORALL_VERTICES(v, graph, DirectedGraph)
         {
@@ -149,14 +152,15 @@ namespace sccalgorithms {
                 vS.push(v);
                 iS.push(adjacent_vertices(v, graph));
 
-                index_components[int_value] = false;
+                //index_components[int_value] = false;
                 roots[int_value] = int_value;
+                visited[int_value] = true;
                 visitation_index[int_value] = traversal_counter;
                 traversal_counter ++;
 
 
                 while(!vS.empty()) {
-                    num_sccs+=nuutila1_visit(traversal_counter, vertex_index_map, graph, visitation_index, roots, index_components, stack1, vS, iS, enumerate_scc, components);
+                    num_sccs+=nuutila1_visit(traversal_counter, vertex_index_map, graph, visitation_index, roots, visited, index_components, stack1, vS, iS, enumerate_scc, components);
                 }
             }
         }
@@ -175,6 +179,7 @@ namespace sccalgorithms {
                                   const Graph &graph,
                                   std::vector<unsigned int> &visitation_index,
                                   std::vector<int> &root,
+                                  std::vector<bool> &visited,
                                   std::vector<bool> &index_components,
                                   std::stack<int> &stack1,
                                   std::vector<bool> &is_on_stack,
@@ -193,7 +198,7 @@ namespace sccalgorithms {
                 typename boost::graph_traits<Graph>::vertex_descriptor new_node= (*(iS.top().first));
                 int index = boost::get(vertex_index_map, new_node);
 
-                if (visitation_index[index] >= 1) {
+                if (visited[index]) {
                     if (!index_components[root[index]]) {
                         if (visitation_index[root[index]] < visitation_index[root[vertex_index]])
                             root[vertex_index] = root[index];
@@ -215,10 +220,11 @@ namespace sccalgorithms {
                     typename boost::graph_traits<Graph>::vertex_descriptor new_node = (*(iS.top().first));
                     int index = boost::get(vertex_index_map, new_node);
 
-                    if (visitation_index[index] < 1) { //not explored
+                    if (!visited[index]) { //not explored
                         root[index] = index;
-                        index_components[index] = false;
+                        //index_components[index] = false;
                         visitation_index[index] = traversal_counter;
+                        visited[index] = true;
                         traversal_counter++;
 
                         vS.push(new_node);
@@ -278,23 +284,24 @@ namespace sccalgorithms {
 
         size_type l = num_vertices(graph);
 
-        std::vector<int> roots(l);
-        std::vector<unsigned int> visitation_index(l);
-        std::vector<bool> index_components(l);
-        std::vector<bool> is_on_stack(l);
+        std::vector<int> roots(l, 0);
+        std::vector<unsigned int> visitation_index(l, 0);
+        std::vector<bool> index_components(l, false);
+        std::vector<bool> is_on_stack(l, false);
+        std::vector<bool> visited(l, false);
         std::stack <int> stack1;
-        unsigned int traversal_counter = 1;
+        unsigned int traversal_counter = 0;
 
         std::stack <typename boost::graph_traits<Graph>::vertex_descriptor> vS;
         std::stack <std::pair <typename boost::graph_traits<Graph>::adjacency_iterator, typename boost::graph_traits<Graph>::adjacency_iterator > > iS;
-
+/*
         for (int i = 0;i<l;i++)
         {
             roots[i] = 0;
             index_components[i] = false;
             visitation_index[i] = 0;
             is_on_stack[i] = false;
-        }
+        }*/
 
         BGL_FORALL_VERTICES(v, graph, DirectedGraph)
             {
@@ -305,14 +312,15 @@ namespace sccalgorithms {
                     vS.push(v);
                     iS.push(adjacent_vertices(v, graph));
 
-                    index_components[int_value] = false;
+                    //index_components[int_value] = false;
                     roots[int_value] = int_value;
+                    visited[int_value] = true;
                     visitation_index[int_value] = traversal_counter;
                     traversal_counter ++;
 
 
                     while(!vS.empty()) {
-                        num_sccs+=nuutila2_visit(traversal_counter, vertex_index_map, graph, visitation_index, roots, index_components, stack1, is_on_stack, vS, iS, enumerate_scc, components);
+                        num_sccs+=nuutila2_visit(traversal_counter, vertex_index_map, graph, visitation_index, roots, visited, index_components, stack1, is_on_stack, vS, iS, enumerate_scc, components);
                     }
                 }
             }
