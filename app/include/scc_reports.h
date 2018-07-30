@@ -9,12 +9,16 @@
 #include <iostream>
 #include <numeric>
 #include <chrono>
+#include <string>
 #include <boost/graph/erdos_renyi_generator.hpp>
 #include <boost/random/linear_congruential.hpp>
 #include <boost/graph/strong_components.hpp>
 #include <boost/graph/adjacency_list.hpp>
+#include "get_rss.h"
 
 typedef std::tuple<unsigned, unsigned, unsigned, std::vector<std::tuple<unsigned, bool> > > scc_record;
+
+typedef std::tuple<unsigned, unsigned, unsigned, size_t, size_t, size_t, std::string> scc_record_memory;
 
 /**
  * Generates a report running algorithms provided on random graphs
@@ -77,6 +81,40 @@ private:
     float minDensity;
     float maxDensity;
     float offsetDensity;
+};
+
+/**
+ * Generates memory report running one provided algorithm on a random graph
+ */
+template <class Graph, class ComponentMap = typename boost::iterator_property_map<typename std::vector<int>::iterator, typename boost::property_map<Graph, boost::vertex_index_t>::const_type> >
+class scc_reports_memory {
+public:
+    scc_reports_memory(unsigned numberOfV, float edgeDensity) : numberOfV(numberOfV),
+                                                                                edgeDensity(edgeDensity) {}
+
+    inline
+    scc_record_memory
+    run(sccalgorithms::scc_algorithm<Graph, ComponentMap> & algorithm) {
+        typedef typename boost::erdos_renyi_iterator<boost::minstd_rand, Graph> ERGen;
+
+        boost::minstd_rand gen;
+        numberOfV = std::max(2u, numberOfV);
+        Graph randomGraph(ERGen(gen, numberOfV, edgeDensity), ERGen(), edgeDensity); // creates a random graph
+
+        size_t tare = getCurrentRSS();
+
+        std::vector<int> component(boost::num_vertices(randomGraph));
+        auto componentMap = boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, randomGraph));
+
+        unsigned num_sccs = algorithm(randomGraph, componentMap);
+
+        size_t algorithmPeak = getPeakRSS();
+
+        return std::make_tuple(numberOfV, boost::num_edges(randomGraph), num_sccs, tare, algorithmPeak, algorithmPeak - tare, algorithm.getName());
+    }
+private:
+    unsigned numberOfV;
+    float edgeDensity;
 };
 
 class report_formatter {

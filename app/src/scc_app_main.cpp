@@ -28,7 +28,7 @@ using namespace sccalgorithms;
         x;\
     } catch (const std::exception & e) {\
         std::cerr << "Error: " << e.what() << endl;\
-        out_usage(cerr, argv[0], PARAMS_HELP);\
+        out_usage(cerr, argv[0], PARAMS_HELP, PARAMS_MEM_HELP);\
         return EXIT_FAILURE;\
     }
 
@@ -59,12 +59,19 @@ const map<string, string> PARAMS_HELP = {
         {"<OFFSET_DENSITY>", "The increment of density between one generated graph and next one."}
 };
 
+const map<string, string> PARAMS_MEM_HELP = {
+        {"<ALGORITHM_NAME>",  "The name of choosen algorithm to run memory analysis on (see above available ones)."},
+        {"<V>",               "The number of verteces to generating the graph with."},
+        {"<DENSITY_EDGE>",    "The density value used to populate graph edges."},
+        {"[<OUTPUT_FILENAME>]", "The file name where to append the result (optional)."},
+};
+
 constexpr char OUTPUT_FILENAME[] = "report.csv";
 
 /**
  * Prints program usage.
  */
-void out_usage(ostream &, const string &, const map<string, string> &);
+void out_usage(ostream &, const string &, const map<string, string> &, const map<string, string> &);
 
 /*
  * ./SCCApp --algorithm boost tarjan nuutila1 --gengraph 1 100 2 0.01 0.3 0.02
@@ -73,12 +80,27 @@ void out_usage(ostream &, const string &, const map<string, string> &);
  * ./SCCApp -g 1 100 2 0.01 0.3 0.02
  * ./SCCApp 1 100 2 0.01 0.3 0.02
  */
+int timeAnalysis(int, char*[]);
+
+/*
+ * ./SCCApp --mem-analysis tarjan 100 0.1 outputFile.csv
+ * ./SCCApp --mem-analysis <ALGORITHM_NAME> <V> <DENSITY_EDGE> <OUTPUT_FILENAME>
+ */
+int memoryAnalysis(int, char*[]);
+
 int main(int argc, char* argv[]) {
     if (argc == 2 && (strcmp("--help", argv[1]) == 0 || strcmp("-h", argv[1]) == 0)) {
-        out_usage(cout, argv[0], PARAMS_HELP);
+        out_usage(cout, argv[0], PARAMS_HELP, PARAMS_MEM_HELP);
         return EXIT_SUCCESS;
     }
 
+    if (argc > 1 && strcmp("--mem-analysis", argv[1]) == 0)
+        return memoryAnalysis(argc, argv);
+    else
+        return timeAnalysis(argc, argv);
+}
+
+int timeAnalysis(int argc, char* argv[]) {
     auto sccAlgorithms = availableAlgorithms<DirectedGraph>(); // TODO availableAlgorithms as constant given ?
 
     vector<scc_algorithm<DirectedGraph> > chosenAlgorithms;
@@ -132,13 +154,58 @@ int main(int argc, char* argv[]) {
     return EXIT_SUCCESS;
 }
 
+int memoryAnalysis(int argc, char* argv[]) {
+    if (argc < 5) {
+        cerr << "Error, not enough parameters given." << endl;
+        out_usage(cerr, argv[0], PARAMS_HELP, PARAMS_HELP);
+        return EXIT_FAILURE;
+    }
+
+    auto sccAlgorithms = availableAlgorithms<DirectedGraph>();
+    auto algorithmIter = find_if(begin(sccAlgorithms), end(sccAlgorithms), [&argv](const auto &alg) {return strcmp(alg.getName().c_str(), argv[2])==0;});
+    if (algorithmIter == end(sccAlgorithms)) {
+        cerr << "Error, cannot find the chosen algorithms `" << argv[2] << "`." << endl;
+        out_usage(cerr, argv[0], PARAMS_HELP, PARAMS_MEM_HELP);
+        return EXIT_FAILURE;
+    }
+
+    scc_algorithm<DirectedGraph> chosenAlgorithm = *algorithmIter;
+    unsigned numV = boost::lexical_cast<unsigned>(argv[3]);
+    float densityE = boost::lexical_cast<float>(argv[4]);
+    string outputFileName = (argc == 6) ? argv[5] : "mem_report_" + chosenAlgorithm.getName() + ".csv";
+
+    scc_record_memory recordResult = scc_reports_memory<DirectedGraph>(numV, densityE).run(chosenAlgorithm);
+    unsigned numberOfV, numberOfE, sccs;
+    size_t tare, algorithmPeak, difference;
+    string algorithmName;
+    std::tie(numberOfV, numberOfE, sccs, tare, algorithmPeak, difference, algorithmName) = recordResult;
+
+    fstream csvFs(outputFileName.c_str(), std::fstream::app);
+    cout << "| V | E | sccs | tare | algorithmPeak | delta | algorithmName |\n";
+    auto out_joint = [&](string sep, ostream & out) {
+        out << numberOfV << sep << numberOfE << sep << sccs
+            << sep << tare << sep << algorithmPeak << sep << difference
+            << sep << algorithmName << endl;
+
+    };
+
+    cout << "| ";
+    out_joint(" | ", cout);
+    out_joint(",", csvFs);
+    cout << endl << "Recort appended to file " << outputFileName << endl;
+
+    csvFs.close();
+    return EXIT_SUCCESS;
+}
+
 /**
  * Prints program usage on sout.
  * @param sout the output stream to print in.
  * @param program_name the name of this executable.
  * @param params_help a map of parameters name and their meaning.
  */
-void out_usage(ostream & sout, const string & program_name, const map<string, string> &params_help) {
+void out_usage(ostream & sout, const string & program_name, const map<string, string> &params_help, const map<string, string> &params_mem_help) {
+    sout << "1) Time Analysis: \n";
     sout << "Usage:\n\n" << "\t" << program_name;
 
     sout << " [--algorithm {ALGORITHM_NAME} --gengraph] ";
@@ -154,6 +221,17 @@ void out_usage(ostream & sout, const string & program_name, const map<string, st
     sout << "\n";
 
     for (const auto & pair : params_help)
+        sout << "\t- " << pair.first << " : " << pair.second << "\n";
+
+    sout << "2) Memory Analisys: \n";
+    sout << "Usage:\n\n" << "\t"
+        << program_name << "--mem-analysis ";
+
+    for (const auto & pair : params_mem_help)
+        sout << " " << pair.first;
+
+    sout << "\nwhere:\n";
+    for (const auto & pair : params_mem_help)
         sout << "\t- " << pair.first << " : " << pair.second << "\n";
 
     sout.flush();
