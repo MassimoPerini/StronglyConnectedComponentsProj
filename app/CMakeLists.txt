@@ -4,7 +4,8 @@ find_package(Boost CONFIG REQUIRED graph)
 
 add_executable(SCCApp
         src/scc_app_main.cpp
-        src/scc_reports.cpp)
+        src/scc_reports.cpp
+        src/get_rss.cpp)
 
 target_include_directories(SCCApp
         PUBLIC
@@ -16,6 +17,18 @@ target_include_directories(SCCApp
 target_link_libraries(SCCApp
         PUBLIC
             SCCAlgorithms::sccalgorithms)
+
+# link library to extract profiler utilities on Windows psapi.lib
+if(WIN32)
+    find_library (PSAPI Psapi)
+    if(PSAPI)
+        target_link_libraries(SCCApp
+            PUBLIC
+                ${PSAPI})
+    else()
+        message(FATAL_ERROR "psapi.lib not found. It is needed to create memory reports. Aborting...")
+    endif()
+endif()
 
 option(SCC_APP_COVERAGE "Enable if you want to generate coverage reports" OFF)
 set(SCC_APP_COVERAGE_ARGV "100 101 2 0.01 0.2 0.2" CACHE STRING "Parameters for program runned in coverage")
