@@ -1,0 +1,95 @@
+# Inspired by https://github.com/boostorg/hana/blob/master/.travis.yml
+
+language: cpp
+sudo: false
+
+# default job
+# GCC 7
+os: linux
+dist: trusty
+env: UNIT_TESTS=true COMPILER=g++-7
+addons: { apt: { packages: ["g++-7"], sources: ["ubuntu-toolchain-r-test"] } }
+
+matrix:
+  include:
+    # Clang 5.0
+    - os: linux
+      dist: trusty
+      env: UNIT_TESTS=true COMPILER=clang++-5.0
+      addons: &defaults { apt: { packages: ["clang-5.0", ], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
+
+    # Clang 6.0
+    - os: linux
+      dist: trusty
+      env: UNIT_TESTS=true COMPILER=clang++-6.0
+      addons: &defaults { apt: { packages: ["clang-6.0", ], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-6.0"] } }
+
+    # GCC 6
+    - os: linux
+      dist: trusty
+      env: UNIT_TESTS=true COMPILER=g++-6
+      addons: { apt: { packages: ["g++-6"], sources: ["ubuntu-toolchain-r-test"] } }
+
+    # Xcode 8.3
+    - os: osx
+      env: UNIT_TESTS=true
+      osx_image: xcode8.3
+
+    # Xcode 9.1
+    - os: osx
+      env: UNIT_TESTS=true
+      osx_image: xcode9.1
+
+install:
+  ############################################################################
+  # All the dependencies are installed in ${HOME}/deps/
+  ############################################################################
+  - DEPS_DIR="${HOME}/deps"
+  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+
+  ############################################################################
+  # Setup default versions and override CXX set by Travis if needed
+  ############################################################################
+  - if [[ "${COMPILER}" == "default" ]]; then COMPILER=clang++-6.0; fi
+  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
+  - ${CXX} --version
+
+  ############################################################################
+  # Install libc++ and libc++abi if needed
+  ############################################################################
+  - |
+    if [[ "${CXX%%+*}" == "clang" ]]; then
+      if [[ "${CXX}" == "clang++-5.0" ]]; then LLVM_VERSION="5.0.2";
+      elif [[ "${CXX}" == "clang++-6.0" ]]; then LLVM_VERSION="6.0.1";
+      fi
+      LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+      LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+      LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
+      mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi
+      travis_retry wget -O - ${LLVM_URL} | tar --strip-components=1 -xJ -C llvm || exit 1
+      travis_retry wget -O - ${LIBCXX_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxx || exit 1
+      travis_retry wget -O - ${LIBCXXABI_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxxabi || exit 1
+      (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install) || exit 1
+      (cd llvm/build/projects/libcxx && make install -j2) || exit 1
+      (cd llvm/build/projects/libcxxabi && make install -j2) || exit 1
+      export CXXFLAGS="-isystem ${DEPS_DIR}/llvm/install/include/c++/v1"
+      export LDFLAGS="-L ${DEPS_DIR}/llvm/install/lib -l c++ -l c++abi"
+      export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/llvm/install/lib"
+    fi
+
+before_script:
+  - cd "${TRAVIS_BUILD_DIR}"
+  - |
+    if [[ "${UNIT_TEST}" == "true" ]]; then
+      export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Debug -DSCC_ALGORITHM_BUILD_TEST=ON"
+    fi
+
+  - (mkdir build && cd build && cmake .. ${CMAKE_OPTIONS})
+
+
+script:
+  - (cd build && make)
+  - |
+    if [[ "${UNIT_TESTS}" == "true" ]]; then
+      ./libsccalgorithms/test/SCCAlgorithms_test
+    fi
