@@ -81,7 +81,7 @@ before_script:
   - cd "${TRAVIS_BUILD_DIR}"
   - |
     if [[ "${UNIT_TEST}" == "true" ]]; then
-      export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DSCC_ALGORITHM_BUILD_TEST=ON"
+      export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Debug -DSCC_ALGORITHM_BUILD_TEST=ON"
     fi
 
   - (mkdir build && cd build && cmake .. ${CMAKE_OPTIONS})
@@ -91,5 +91,5 @@ script:
   - (cd build && make)
   - |
     if [[ "${UNIT_TESTS}" == "true" ]]; then
-      (make tests -j2 -k) && ./libsccalgorithms/SCCAlgorithms_test
+      ./libsccalgorithms/test/SCCAlgorithms_test
     fi
