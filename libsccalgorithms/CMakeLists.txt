@@ -1,7 +1,8 @@
 hunter_add_package(Boost COMPONENTS graph)
 find_package(Boost CONFIG REQUIRED graph)
 
-add_library(SCCAlgorithms)
+add_library(SCCAlgorithms
+        src/scc_utils.cpp)
 
 add_library(SCCAlgorithms::sccalgorithms
         ALIAS

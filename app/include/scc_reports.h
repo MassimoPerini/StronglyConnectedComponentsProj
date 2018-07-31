@@ -20,6 +20,26 @@ typedef std::tuple<unsigned, unsigned, unsigned, std::vector<std::tuple<unsigned
 
 typedef std::tuple<unsigned, unsigned, unsigned, size_t, size_t, size_t, std::string> scc_record_memory;
 
+template <class Graph, class ComponentMap = typename boost::iterator_property_map<typename std::vector<int>::iterator, typename boost::property_map<Graph, boost::vertex_index_t>::const_type> >
+class run_algorithm_class{
+public:
+    run_algorithm_class(Graph &randomGraph, ComponentMap &componentMap, sccalgorithms::scc_algorithm<Graph, ComponentMap> &algorithm) : randomGraph(randomGraph),
+                                                                                                                                        componentMap(componentMap),
+                                                                                                                                        algorithm(algorithm){}
+
+    inline unsigned int run()
+    {
+        return algorithm(randomGraph, componentMap);
+    }
+
+private:
+    Graph randomGraph;
+    ComponentMap componentMap;
+    sccalgorithms::scc_algorithm<Graph, ComponentMap> algorithm;
+
+
+};
+
 /**
  * Generates a report running algorithms provided on random graphs
  */
@@ -106,7 +126,8 @@ public:
         auto componentMap = boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, randomGraph));
 
         size_t tare = getCurrentRSS();
-        unsigned num_sccs = algorithm(randomGraph, componentMap);
+        //unsigned num_sccs = algorithm(randomGraph, componentMap);
+        unsigned num_sccs = run_algorithm_class<sccalgorithms::DirectedGraph>(randomGraph, componentMap, algorithm).run();
 
         size_t algorithmPeak = getPeakRSS();
 
