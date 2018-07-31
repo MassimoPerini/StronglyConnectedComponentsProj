@@ -101,11 +101,11 @@ public:
         numberOfV = std::max(2u, numberOfV);
         Graph randomGraph(ERGen(gen, numberOfV, edgeDensity), ERGen(), edgeDensity); // creates a random graph
 
-        size_t tare = getCurrentRSS();
 
         std::vector<int> component(boost::num_vertices(randomGraph));
         auto componentMap = boost::make_iterator_property_map(component.begin(), boost::get(boost::vertex_index, randomGraph));
 
+        size_t tare = getCurrentRSS();
         unsigned num_sccs = algorithm(randomGraph, componentMap);
 
         size_t algorithmPeak = getPeakRSS();

@@ -217,12 +217,12 @@ void out_usage(ostream & sout, const string & program_name, const map<string, st
         sout << alg << " ";
     sout << "\n";
 
-    for (const auto & pair : params_help)
+    for (const auto & pair : params_mem_help)
         sout << "\t- " << pair.first << " : " << pair.second << "\n";
 
-    sout << "2) Memory Analisys: \n";
+    sout << "\n2) Memory Analisys: \n";
     sout << "Usage:\n\n" << "\t"
-        << program_name << "--mem-analysis ";
+        << program_name << " --mem-analysis ";
 
     for (const auto & pair : params_mem_help)
         sout << " " << pair.first;
