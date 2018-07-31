@@ -5,9 +5,7 @@
 #include <boost/graph/iteration_macros.hpp>
 #include <boost/property_map/property_map.hpp>
 
-#include <iostream>
 #include <stack>
-#include <sccalgorithms/scc_utils.h>
 
 namespace sccalgorithms {
 

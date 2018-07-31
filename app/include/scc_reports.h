@@ -6,7 +6,7 @@
 #include <tuple>
 #include <sccalgorithms/scc_algorithms.h>
 #include <sccalgorithms/scc_algorithm.h>
-#include <iostream>
+#include <sccalgorithms/scc_algorithm.h>
 #include <numeric>
 #include <chrono>
 #include <string>

@@ -4,7 +4,6 @@ find_package(Boost CONFIG REQUIRED graph)
 
 add_executable(SCCApp
         src/scc_app_main.cpp
-        src/scc_reports.cpp
         src/get_rss.cpp)
 
 target_include_directories(SCCApp
@@ -26,7 +25,7 @@ if(WIN32)
             PUBLIC
                 ${PSAPI})
     else()
-        message(FATAL_ERROR "psapi.lib not found. It is needed to create memory reports. Aborting...")
+        message(FATAL_ERROR "psapi.lib not found. It is needed to create memory reports. borting...")
     endif()
 endif()
 

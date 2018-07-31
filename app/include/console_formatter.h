@@ -6,7 +6,6 @@
 #define SCC_CONSOLE_FORMATTER_H
 
 #include "scc_reports.h"
-#include <chrono>
 
 using namespace std;
 

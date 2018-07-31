@@ -1,14 +1,7 @@
 hunter_add_package(Boost COMPONENTS graph)
 find_package(Boost CONFIG REQUIRED graph)
 
-add_library(SCCAlgorithms
-        src/scc_algorithms_pearce.cpp
-        src/scc_algorithms_nuutila.cpp
-        src/scc_utils.cpp
-        src/iterative/scc_algorithms_nuutila1_iterative.cpp
-        src/iterative/scc_algorithms_nuutila2_iterative.cpp
-        src/iterative/scc_algorithms_pearce_iterative.cpp
-        src/scc_algorithms_tarjan.cpp)
+add_library(SCCAlgorithms)
 
 add_library(SCCAlgorithms::sccalgorithms
         ALIAS

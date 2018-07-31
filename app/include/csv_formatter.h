@@ -2,7 +2,6 @@
 #define SCC_CSV_FORMATTER_H
 
 #include "scc_reports.h"
-#include <chrono>
 
 using namespace std;
 

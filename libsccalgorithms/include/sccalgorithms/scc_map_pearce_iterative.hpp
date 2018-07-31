@@ -8,15 +8,10 @@
 #include "sccalgorithms/scc_algorithms.h"
 #include <boost/graph/iteration_macros.hpp>
 #include <boost/property_map/property_map.hpp>
-
-#include <iostream>
-#include <stack>
-#include <sccalgorithms/scc_utils.h>
-
-#include <boost/graph/iteration_macros.hpp>
 #include <boost/graph/adjacency_iterator.hpp>
-#include <boost/graph/graph_traits.hpp>
-#include <boost/graph/adjacency_list.hpp>
+
+#include <stack>
+
 
 //typedef boost::graph_traits<Graph>::adjacency_iterator adj_iterator;
 

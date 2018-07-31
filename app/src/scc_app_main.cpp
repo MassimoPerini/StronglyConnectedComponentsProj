@@ -1,13 +1,6 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <sccalgorithms/scc_utils.h>
-#include <sccalgorithms/scc_algorithms.h>
-#include <scc_reports.h>
-#include <boost/lexical_cast.hpp>
-#include <boost/property_map/property_map.hpp>
-#include "scc_reports.h"
-#include "console_formatter.h"
 #include "csv_formatter.h"
 #include <vector>
 #include <fstream>
@@ -16,8 +9,12 @@
 #include <stdexcept>
 #include <iterator>
 
-#include <iostream>
-#include <fstream>
+#include <sccalgorithms/scc_algorithms.h>
+#include <boost/lexical_cast.hpp>
+#include <boost/property_map/property_map.hpp>
+
+#include "scc_reports.h"
+#include "console_formatter.h"
 
 
 using namespace std;

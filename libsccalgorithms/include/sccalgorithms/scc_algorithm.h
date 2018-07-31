@@ -3,7 +3,6 @@
 
 #include <string>
 #include <functional>
-#include <sccalgorithms/scc_utils.h>
 #include <boost/property_map/property_map.hpp>
 
 namespace sccalgorithms {

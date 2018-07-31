@@ -6,7 +6,6 @@
 #include <boost/graph/iteration_macros.hpp>
 #include <boost/property_map/property_map.hpp>
 
-#include <iostream>
 #include <stack>
 
 #ifndef SCC_SCC_MAP_ALGORITHMS_H
