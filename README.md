@@ -4,7 +4,7 @@ Strongly connected components project
 - Andrea Corsini : [andrea.corsini@mail.polimi.it](andrea.corsini@mail.polimi.it)
 - Massimo Perini : [massimo.perini@mail.polimi.it](massimo.perini@mail.polimi.it)
 
-[![Build Status](https://travis-ci.com/massimoPerini/StronglyConnectedComponentsProj.svg?token=2zyVh8xUmBzVfC1pCxp9&branch=project-structure)](https://travis-ci.com/massimoPerini/StronglyConnectedComponentsProj)
+[![Build Status](https://travis-ci.com/massimoPerini/StronglyConnectedComponentsProj.svg?token=2zyVh8xUmBzVfC1pCxp9&branch=master)](https://travis-ci.com/massimoPerini/StronglyConnectedComponentsProj)
 
 ## Project structure
 
